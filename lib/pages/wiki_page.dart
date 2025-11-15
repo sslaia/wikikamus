@@ -1,15 +1,20 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:wikikamus/components/home_icon_button.dart';
-import 'package:wikikamus/components/random_icon_button.dart';
-import 'package:wikikamus/components/refresh_icon_button.dart';
-import 'package:wikikamus/pages/home_page_builders/default_home_page_builder.dart';
 
+import 'package:wikikamus/pages/home_page_builders/bew_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/bjn_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/btm_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/default_home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/en_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/gor_home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/id_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/jv_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/mad_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/min_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/ms_home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/nia_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/su_home_page_builder.dart';
 import 'package:wikikamus/services/api_service.dart';
 
 class WikiPage extends StatefulWidget {
@@ -43,49 +48,30 @@ class _WikiPageState extends State<WikiPage> {
 
   HomePageBuilder _getPageBuilder(String languageCode) {
     final builder = {
-      // 'bew': BetawiHomePageBuilder(),
-      // 'bjn': BanjarHomePageBuilder(),
-      // 'btm': BatakMandailingHomePageBuilder(),
+      'bew': BetawiHomePageBuilder(),
+      'bjn': BanjarHomePageBuilder(),
+      'btm': BatakMandailingHomePageBuilder(),
       'en': EnglishHomePageBuilder(),
-      // 'gor': GorontaloHomePageBuilder(),
+      'gor': GorontaloHomePageBuilder(),
       'id': IndonesianHomePageBuilder(),
-      // 'jv': JavaneseHomePageBuilder(),
-      // 'mad': MadureseHomePageBuilder(),
-      // 'min': MinangkabauHomePageBuilder(),
-      // 'ms': MalayHomePageBuilder(),
+      'jv': JavaneseHomePageBuilder(),
+      'mad': MadureseHomePageBuilder(),
+      'min': MinangkabauHomePageBuilder(),
+      'ms': MalayHomePageBuilder(),
       'nia': NiasHomePageBuilder(),
-      // 'su': SundaneseHomePageBuilder()
+      'su': SundaneseHomePageBuilder()
     };
     return builder[languageCode] ?? DefaultHomePageBuilder();
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> barChildren = [
-      // OpenDrawerButton(),
-      Expanded(
-        child: Text(
-          'wiktionary'.tr(),
-          textAlign: TextAlign.left,
-          style: GoogleFonts.cinzelDecorative(
-            textStyle: Theme.of(context).textTheme.displayLarge,
-            fontWeight: FontWeight.bold,
-            letterSpacing: .7,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
-      ),
-      HomeIconButton(),
-      RefreshIconButton(languageCode: widget.languageCode, title: widget.title),
-      RandomIconButton(languageCode: widget.languageCode),
-    ];
-
     return Scaffold(
       drawer: _pageBuilder.buildDrawer(context),
-      bottomNavigationBar: BuildBottomAppBar(barChildren: barChildren),
+      bottomNavigationBar: _pageBuilder.buildWikiPageBottomAppBar(context, widget.title),
       body: CustomScrollView(
         slivers: [
-          _pageBuilder.buildAppBar(context, widget.title),
+          _pageBuilder.buildWikiPageAppBar(context, widget.title),
           SliverToBoxAdapter(
             child: FutureBuilder<String>(
               future: _futurePageContent,
@@ -110,24 +96,6 @@ class _WikiPageState extends State<WikiPage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class BuildBottomAppBar extends StatelessWidget {
-  const BuildBottomAppBar({super.key, required this.barChildren});
-
-  final List<Widget> barChildren;
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomAppBar(
-      shape: const CircularNotchedRectangle(),
-      notchMargin: 6.0,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: barChildren,
       ),
     );
   }

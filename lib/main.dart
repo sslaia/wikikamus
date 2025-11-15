@@ -3,9 +3,16 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:wikikamus/pages/settings_page.dart';
+import 'package:wikikamus/localizations/bew_material_localizations.dart';
+import 'package:wikikamus/localizations/bjn_material_localizations.dart';
+import 'package:wikikamus/localizations/btm_material_localizations.dart';
+import 'package:wikikamus/localizations/gor_material_localizations.dart';
+import 'package:wikikamus/localizations/jv_material_localizations.dart';
+import 'package:wikikamus/localizations/mad_material_localizations.dart';
+import 'package:wikikamus/localizations/min_material_localizations.dart';
+import 'package:wikikamus/localizations/su_material_localizations.dart';
 
-import 'package:wikikamus/providers/locale_provider.dart';
+import 'package:wikikamus/pages/settings_page.dart';
 import 'package:wikikamus/localizations/nia_material_localizations.dart';
 import 'package:wikikamus/pages/onboarding_page.dart';
 import 'package:wikikamus/pages/home_page.dart';
@@ -17,15 +24,16 @@ import 'package:wikikamus/themes/app_themes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  final initialLanguageCode = await getInitialLanguageCode();
-  final initialMainPageTitle = await getMainPageTitle();
+  final settingsProvider = SettingsProvider();
+  await settingsProvider.loadSettings();
 
   final prefs = await SharedPreferences.getInstance();
+  final initialLanguageCode = settingsProvider.activeLanguageCode;
 
   runApp(
     EasyLocalization(
-      supportedLocales: const [Locale('en'), Locale('id'), Locale('nia')],
-      // supportedLocales: const [Locale('bew'), Locale('bjn'), Locale('btm'), Locale('en'), Locale('gor'), Locale('id'), Locale('mad'), Locale('min'), Locale('ms'), Locale('nia'), Locale('su')],
+      // supportedLocales: const [Locale('en'), Locale('id'), Locale('nia')],
+      supportedLocales: const [Locale('bew'), Locale('bjn'), Locale('btm'), Locale('en'), Locale('gor'), Locale('id'), Locale('mad'), Locale('min'), Locale('ms'), Locale('nia'), Locale('su')],
       startLocale: Locale(initialLanguageCode),
       fallbackLocale: const Locale('id'),
       path: 'assets/translations',
@@ -33,13 +41,7 @@ void main() async {
         providers: [
           ChangeNotifierProvider(create: (_) => ThemeProvider()),
           ChangeNotifierProvider(create: (_) => FontSizeProvider()),
-          ChangeNotifierProvider(create: (_) => LocaleProvider(Locale(initialLanguageCode))),
-          ChangeNotifierProxyProvider<LocaleProvider, SettingsProvider>(
-            create: (context) => SettingsProvider(
-              Provider.of<LocaleProvider>(context, listen: false),
-            ),
-            update: (context, localeProvider, previousSettingsProvider) =>
-            previousSettingsProvider ?? SettingsProvider(localeProvider),
+          ChangeNotifierProvider(create: (_) => SettingsProvider(),
           ),
         ],
         child: Consumer2<ThemeProvider, FontSizeProvider>(
@@ -49,8 +51,6 @@ void main() async {
             return MyApp(
                 themeProvider: themeProvider,
                 fontSizeProvider: fontSizeProvider,
-                languageCode: initialLanguageCode,
-                mainPageTitle: initialMainPageTitle,
                 onboardingComplete: onboardingComplete,
             );
           },
@@ -60,41 +60,15 @@ void main() async {
   );
 }
 
-Future<String> getInitialLanguageCode() async {
-  final prefs = await SharedPreferences.getInstance();
-  final languageCode = prefs.getString('user_language_code');
-
-  if (languageCode != null) {
-    return languageCode;
-  }
-  // Default languageCode if nothing is saved
-  return 'id';
-}
-
-Future<String> getMainPageTitle() async {
-  final prefs = await SharedPreferences.getInstance();
-  final mainPageTitle = prefs.getString('user_main_page_title');
-
-  if (mainPageTitle != null) {
-    return mainPageTitle;
-  }
-  // Default main page if nothing is saved
-  return 'Wikikamus:Halaman Utama';
-}
-
 class MyApp extends StatelessWidget {
   final ThemeProvider themeProvider;
   final FontSizeProvider fontSizeProvider;
-  final String languageCode;
-  final String mainPageTitle;
   final bool onboardingComplete;
 
   const MyApp({
     super.key,
     required this.themeProvider,
     required this.fontSizeProvider,
-    required this.languageCode,
-    required this.mainPageTitle,
     required this.onboardingComplete,
   });
 
@@ -107,7 +81,15 @@ class MyApp extends StatelessWidget {
       title: 'Wikikamus',
       localizationsDelegates: [
         EasyLocalization.of(context)!.delegate,
+        const BewMaterialLocalizationsDelegate(),
+        const BjnMaterialLocalizationsDelegate(),
+        const BtmMaterialLocalizationsDelegate(),
+        const GorMaterialLocalizationsDelegate(),
+        const JvMaterialLocalizationsDelegate(),
+        const MadMaterialLocalizationsDelegate(),
+        const MinMaterialLocalizationsDelegate(),
         const NiaMaterialLocalizationsDelegate(),
+        const SuMaterialLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -117,15 +99,12 @@ class MyApp extends StatelessWidget {
       theme: AppThemes.getLightTheme(fontScale),
       darkTheme: AppThemes.getDarkTheme(fontScale),
       themeMode: themeProvider.themeMode,
-        initialRoute: onboardingComplete ? '/' : '/onboarding',
+        initialRoute: onboardingComplete ? '/settings' : '/settings',
         routes: {
-          '/': (context) => HomePage(languageCode: languageCode, mainPageTitle: mainPageTitle),
+          '/': (context) => HomePage(),
           '/settings': (context) => const SettingsPage(),
           '/onboarding': (context) => const OnboardingPage(),
         },
-      // home: (onboardingComplete)
-      //     ? HomePage(languageCode: languageCode, mainPageTitle: mainPageTitle)
-      //     : const OnboardingPage(),
     );
   }
 }

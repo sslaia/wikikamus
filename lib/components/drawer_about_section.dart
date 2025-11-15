@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:wikikamus/data/about_app.dart';
 import 'package:wikikamus/data/whats_new.dart';
 import 'package:wikikamus/pages/about_page.dart';
@@ -13,10 +14,11 @@ class DrawerAboutSection extends StatelessWidget {
       initiallyExpanded: true,
       title: Text(
         'about'.tr(),
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-          fontFamily: 'Gelasio',
-          fontWeight: FontWeight.w700,
+        style: GoogleFonts.gelasio(
+          textStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
       children: [
@@ -24,13 +26,13 @@ class DrawerAboutSection extends StatelessWidget {
           title: 'whats_new',
           label: 'whats_new',
           html: whatsNew,
-          icon: Icon(Icons.newspaper_outlined),
+          icon: Icon(Icons.change_circle_outlined),
         ),
         AboutListTile(
           title: 'app',
           label: 'about_app',
           html: aboutApp,
-          icon: Icon(Icons.smartphone_outlined),
+          icon: Icon(Icons.android_outlined),
         ),
       ],
     );

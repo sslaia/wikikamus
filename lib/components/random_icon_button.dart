@@ -1,8 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:wikikamus/pages/wiki_page.dart';
-import 'package:wikikamus/providers/settings_provider.dart';
 import 'package:wikikamus/services/api_service.dart';
 
 class RandomIconButton extends StatefulWidget {

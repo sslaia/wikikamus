@@ -11,8 +11,7 @@ class RefreshHomeIconButton extends StatelessWidget {
       icon: Icon(Icons.refresh_outlined),
       color: Theme.of(context).colorScheme.primary,
       onPressed: () {
-        Navigator.pop(context);
-        Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+        Navigator.of(context).popUntil((route) => route.isFirst);
       },
     );
   }

@@ -245,22 +245,36 @@ class ApiService {
   }
 
   /// Search for a page on Wiktionary
-  Future<List<SearchResult>> searchWiktionary({
+  Future<Map<String, dynamic>> searchWiktionary({
     required String languageCode,
     required String query,
+    int? sroffset,
   }) async {
-    final Uri url = Uri.https('$languageCode.m.wiktionary.org', '/w/api.php', {
+    final Map<String, String> params = {
       'action': 'query',
       'list': 'search',
       'srsearch': query,
       'format': 'json',
       'utf8': '1',
-    });
+    };
+
+    if (sroffset != null) {
+      params['sroffset'] = sroffset.toString();
+    }
+
+    final Uri url = Uri.https('$languageCode.m.wiktionary.org', '/w/api.php', params);
 
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      return compute(parseSearch, response.body);
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      final List<SearchResult> results = await parseSearch(response.body);
+      final int? nextOffset = data['continue']['sroffset'] as int?;
+
+      return {
+        'results': results,
+        'nextOffset': nextOffset,
+      };
     } else {
       throw Exception(
         'Failed to load search results. Status code: ${response.statusCode}',

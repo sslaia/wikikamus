@@ -1,8 +1,9 @@
 const whatsNew = '''
 <h3>Rencana untuk versi-versi berikutnya</h3>
 <ul>
-<li>Pengguna bisa membesarkan atau mengecilkan huruf.</li>
-<li>Memoles tampilan halaman utama setiap bahasa daerah.</li>
+<li>Memoles tampilan halaman utama setiap bahasa daerah. 
+Saat ini tidak diproses apa pun, jadi tampilan bisa kacau, tergantung style yang digunakan.</li>
+<li>Memperbaiki <em>rendering</em> aksara bahasa daerah.</li>
 <li>Memperbaiki penganganan pranala wiki.</li>
 <li>Memungkinkan pengguna mereset pembaharuan konten halaman. 
 Sekarang ini konten halaman diunduh sekali seminggu.</li>

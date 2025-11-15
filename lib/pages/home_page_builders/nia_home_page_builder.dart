@@ -2,19 +2,26 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:wikikamus/components/bottom_app_bar_label.dart';
 import 'package:wikikamus/components/drawer_about_section.dart';
 import 'package:wikikamus/components/drawer_community_tools_section.dart';
 import 'package:wikikamus/components/drawer_header_section.dart';
 import 'package:wikikamus/components/drawer_settings_section.dart';
+import 'package:wikikamus/components/edit_icon_button.dart';
+import 'package:wikikamus/components/home_icon_button.dart';
 import 'package:wikikamus/components/open_drawer_button.dart';
 import 'package:wikikamus/components/random_icon_button.dart';
 import 'package:wikikamus/components/refresh_home_icon_button.dart';
+import 'package:wikikamus/components/refresh_icon_button.dart';
+import 'package:wikikamus/components/share_icon_button.dart';
+import 'package:wikikamus/components/view_on_web_icon_button.dart';
+import 'package:wikikamus/pages/create_nias_new_entry.dart';
 import 'package:wikikamus/utils/processed_title.dart';
 import 'home_page_builder.dart';
 
 class NiasHomePageBuilder implements HomePageBuilder {
   @override
-  SliverAppBar buildAppBar(BuildContext context, String title) {
+  SliverAppBar buildHomePageAppBar(BuildContext context, String title) {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: Text(
@@ -47,7 +54,9 @@ class NiasHomePageBuilder implements HomePageBuilder {
                 alignment: Alignment.bottomCenter,
                 child: Text(
                   processedTitle(title),
-                  style: TextStyle(
+                  style: GoogleFonts.ubuntuSans(
+                    textStyle: Theme.of(context).textTheme.titleSmall,
+                    fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),
                 ),
@@ -60,20 +69,76 @@ class NiasHomePageBuilder implements HomePageBuilder {
   }
 
   @override
-  Widget buildBottomAppBar(BuildContext context) {
-    final List<Widget> barChildren = [
-      OpenDrawerButton(),
-      Text(
-        'wiktionary'.tr(),
+  SliverAppBar buildWikiPageAppBar(BuildContext context, String title) {
+    final String pageUrl = 'https://nia.m.wiktionary.org/wiki/$title';
+
+    return SliverAppBar(
+      automaticallyImplyLeading: false,
+      title: Text(
+        'Wikikamus Nias',
         style: GoogleFonts.cinzelDecorative(
-          textStyle: Theme.of(context).textTheme.displayLarge,
+          textStyle: Theme.of(context).textTheme.titleSmall,
           fontWeight: FontWeight.bold,
-          letterSpacing: .7,
-          color: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.secondary,
         ),
       ),
-      const Spacer(),
+      expandedHeight: 200,
+      flexibleSpace: FlexibleSpaceBar(
+        background: Stack(
+          fit: StackFit.expand,
+          children: [
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Image.asset(
+                  'assets/images/nias/baluse.webp',
+                  fit: BoxFit.fitWidth,
+                  width: double.infinity,
+                  height: 200,
+                ),
+              ),
+            ),
+            Positioned(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  title,
+                  style: GoogleFonts.ubuntu(
+                    textStyle: Theme.of(context).textTheme.titleSmall,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        ShareIconButton(url: pageUrl),
+        EditIconButton(url: '$pageUrl?action=edit&section=all'),
+        ViewOnWebIconButton(url: pageUrl),
+      ],
+    );
+  }
+
+  @override
+  Widget buildHomePageBottomAppBar(BuildContext context) {
+    final List<Widget> barChildren = [
+      OpenDrawerButton(),
+      BottomAppBarLabel(),
       RefreshHomeIconButton(),
+      RandomIconButton(languageCode: 'nia'),
+    ];
+    return BottomAppBar(child: Row(children: barChildren));
+  }
+
+  @override
+  Widget buildWikiPageBottomAppBar(BuildContext context, String title) {
+    final List<Widget> barChildren = [
+      BottomAppBarLabel(),
+      HomeIconButton(),
+      RefreshIconButton(languageCode: 'nia', title: title),
       RandomIconButton(languageCode: 'nia'),
     ];
     return BottomAppBar(child: Row(children: barChildren));
@@ -101,7 +166,6 @@ class NiasHomePageBuilder implements HomePageBuilder {
 
   @override
   Widget buildBody(BuildContext context, Future<String> futureContent) {
-    // This is the generic body content structure.
     return FutureBuilder<String>(
       future: futureContent,
       builder: (context, snapshot) {
@@ -119,15 +183,11 @@ class NiasHomePageBuilder implements HomePageBuilder {
 
           return Padding(
             padding: const EdgeInsets.all(16.0),
-            // child: Html(data: snapshot.data),
             child: HtmlWidget(
               pageContent,
               buildAsync: true,
               textStyle: GoogleFonts.ubuntu(
                 textStyle: Theme.of(context).textTheme.bodyMedium,
-                // fontWeight: FontWeight.bold,
-                // letterSpacing: .7,
-                // color: Theme.of(context).colorScheme.onPrimary,
               ),
 
               /// Customization for mobile display
@@ -140,25 +200,8 @@ class NiasHomePageBuilder implements HomePageBuilder {
                   return {'font-size': '1.2em'};
                 }
 
-                // Adjust blockquotes font size (in amaedola)
-                if (element.localName == 'blockquote') {
-                  return {'font-size': '1em'};
-                }
                 return null;
               },
-
-              /// Customization for cards
-              // customStylesBuilder: (element) {
-              //   if (element.classes.contains('custom-card')) {
-              //     return {
-              //       'border': '1px solid #a2a9b1',
-              //       'border-radius': '4px',
-              //       'padding': '1em',
-              //       'margin-bottom': '1em',
-              //       // Nias-specific highlight color could go here
-              //       'background-color': '#f8f9fa',
-              //     };
-              //   }
             ),
           );
         }

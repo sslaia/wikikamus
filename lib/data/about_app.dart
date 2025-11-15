@@ -1,10 +1,11 @@
 const aboutApp = '''
 <p>Aplikasi ini merupakan alat bantu bagi mereka yang ingin
-mengembangkan bahasa ibu mereka di Wikikamus.</p>
+mengembangkan bahasa ibu mereka di Wikikamus
+dengan menggunakan perangkat <em>smartphone</em>.</p>
 
 <p>Bukan hanya di Tanah Air, melainkan juga di berbagai penjuru dunia,
 berbagai komunitas wiki berurung daya membebaskan pengetahuan
-dalam bahasa ibu mereka masing-masing.</p>
+dalam bahasa ibu mereka masing-masing, termasuk melalui Wikikamus.</p>
 
 <h3>Yang bisa dibuat</h3>
 

@@ -1,7 +1,6 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wikikamus/components/open_drawer_button.dart';
 import 'package:wikikamus/components/random_icon_button.dart';
@@ -9,105 +8,60 @@ import 'package:wikikamus/components/refresh_home_icon_button.dart';
 import 'package:wikikamus/components/spacer_image.dart';
 import 'package:wikikamus/components/wiktionary_search.dart';
 import 'package:wikikamus/data/footer.dart';
+import 'package:wikikamus/pages/home_page_builders/bew_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/bjn_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/btm_home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/default_home_page_builder.dart';
 
 import 'package:wikikamus/pages/home_page_builders/en_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/gor_home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/id_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/jv_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/mad_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/min_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/ms_home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/nia_home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/su_home_page_builder.dart';
+import 'package:wikikamus/pages/wiki_page.dart';
 import 'package:wikikamus/services/api_service.dart';
 import 'package:wikikamus/services/cache_service.dart';
 
-class HomePage extends StatefulWidget {
-  final String languageCode;
-  final String mainPageTitle;
+import '../providers/settings_provider.dart';
 
-  const HomePage({
-    super.key,
-    required this.languageCode,
-    required this.mainPageTitle,
-  });
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<String> _futureMainPageContent;
-  late HomePageBuilder _pageBuilder;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageBuilder = _getPageBuilder(widget.languageCode);
-    _futureMainPageContent = _loadInitialData();
-  }
-
-  Future<String> _loadInitialData() async {
-    final apiService = ApiService();
-    final prefs = await SharedPreferences.getInstance();
-    final cacheService = CacheService(prefs, apiService);
-
-    return cacheService.getMainPageContent(
-      languageCode: widget.languageCode,
-      title: widget.mainPageTitle,
-    );
-  }
-
-  HomePageBuilder _getPageBuilder(String languageCode) {
-    final builder = {
-      // 'bew': BetawiHomePageBuilder(),
-      // 'bjn': BanjarHomePageBuilder(),
-      // 'btm': BatakMandailingHomePageBuilder(),
-      'en': EnglishHomePageBuilder(),
-      // 'gor': GorontaloHomePageBuilder(),
-      'id': IndonesianHomePageBuilder(),
-      // 'jv': JavaneseHomePageBuilder(),
-      // 'mad': MadureseHomePageBuilder(),
-      // 'min': MinangkabauHomePageBuilder(),
-      // 'ms': MalayHomePageBuilder(),
-      'nia': NiasHomePageBuilder(),
-      // 'su': SundaneseHomePageBuilder()
-    };
-    return builder[languageCode] ?? DefaultHomePageBuilder();
-  }
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> barChildren = [
-      OpenDrawerButton(),
-      Expanded(
-        child: Text(
-          'wiktionary'.tr(),
-          textAlign: TextAlign.left,
-          style: GoogleFonts.cinzelDecorative(
-            textStyle: Theme.of(context).textTheme.displayLarge,
-            fontWeight: FontWeight.bold,
-            letterSpacing: .7,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
-      ),
-      RefreshHomeIconButton(),
-      RandomIconButton(languageCode: widget.languageCode),
-    ];
+    final settingsProvider = Provider.of<SettingsProvider>(context);
+    final languageCode = settingsProvider.activeLanguageCode;
+    final mainPageTitle = settingsProvider.getMainPageTitle();
+
+    final pageBuilder = _getPageBuilder(languageCode);
+    final futureMainPageContent = _loadInitialData(languageCode, mainPageTitle);
 
     return Scaffold(
-      // backgroundColor: Theme.of(context).colorScheme.surface,
-      drawer: _pageBuilder.buildDrawer(context),
-      bottomNavigationBar: BuildBottomAppBar(barChildren: barChildren),
+      drawer: pageBuilder.buildDrawer(context),
+      bottomNavigationBar: pageBuilder.buildHomePageBottomAppBar(context),
       body: CustomScrollView(
         slivers: [
-          _pageBuilder.buildAppBar(context, widget.mainPageTitle),
+          pageBuilder.buildHomePageAppBar(context, mainPageTitle),
           SliverToBoxAdapter(
             child: Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: WiktionarySearch(languageCode: widget.languageCode),
+                  child: WiktionarySearch(languageCode: languageCode),
                 ),
                 FutureBuilder<String>(
-                  future: _futureMainPageContent,
+                  future: futureMainPageContent,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
@@ -119,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     }
                     if (snapshot.hasData) {
-                      return _pageBuilder.buildBody(
+                      return pageBuilder.buildBody(
                         context,
                         Future.value(snapshot.data!),
                       );
@@ -142,20 +96,31 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class BuildBottomAppBar extends StatelessWidget {
-  const BuildBottomAppBar({super.key, required this.barChildren});
+Future<String> _loadInitialData(String languageCode, String title) async {
+  final apiService = ApiService();
+  final prefs = await SharedPreferences.getInstance();
+  final cacheService = CacheService(prefs, apiService);
 
-  final List<Widget> barChildren;
+  return cacheService.getMainPageContent(
+    languageCode: languageCode,
+    title: title,
+  );
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return BottomAppBar(
-      shape: const CircularNotchedRectangle(),
-      notchMargin: 6.0,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: barChildren,
-      ),
-    );
-  }
+HomePageBuilder _getPageBuilder(String languageCode) {
+  final builder = {
+    'bew': BetawiHomePageBuilder(),
+    'bjn': BanjarHomePageBuilder(),
+    'btm': BatakMandailingHomePageBuilder(),
+    'en': EnglishHomePageBuilder(),
+    'gor': GorontaloHomePageBuilder(),
+    'id': IndonesianHomePageBuilder(),
+    'jv': JavaneseHomePageBuilder(),
+    'mad': MadureseHomePageBuilder(),
+    'min': MinangkabauHomePageBuilder(),
+    'ms': MalayHomePageBuilder(),
+    'nia': NiasHomePageBuilder(),
+    'su': SundaneseHomePageBuilder()
+  };
+  return builder[languageCode] ?? DefaultHomePageBuilder();
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DrawerHeaderSection extends StatelessWidget {
   const DrawerHeaderSection({super.key});
@@ -6,22 +7,22 @@ class DrawerHeaderSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 200,
+        height: 150,
         width: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/nias/ni'obutelai.webp"),
-            fit: BoxFit.fitWidth,
+            image: AssetImage("assets/images/wiktionary.webp"),
+            fit: BoxFit.fitHeight,
           ),
         ),
         child: Align(
           alignment: Alignment.bottomCenter,
           child: Text(
             'Wikikamus',
-            style: TextStyle(
-              // fontFamily: 'CinzelDecorative',
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
+            style: GoogleFonts.cinzelDecorative(
+              textStyle: Theme.of(context).textTheme.displayLarge,
+              fontWeight: FontWeight.bold,
+              letterSpacing: .7,
               color: Theme.of(context).colorScheme.primary,
             ),
           ),

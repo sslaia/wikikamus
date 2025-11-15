@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wikikamus/pages/home_page.dart';
 import 'package:wikikamus/pages/wiki_page.dart';
@@ -33,10 +34,11 @@ class DrawerCommunityToolsSection extends StatelessWidget {
       initiallyExpanded: true,
       title: Text(
         'community_tools'.tr(),
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-          fontFamily: 'Gelasio',
-          fontWeight: FontWeight.w700,
+        style: GoogleFonts.gelasio(
+          textStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
       children: [
@@ -44,64 +46,42 @@ class DrawerCommunityToolsSection extends StatelessWidget {
           leading: Icon(Icons.home_outlined),
           title: Text('main_page'.tr()),
           onTap: () {
-            Navigator.pop(context);
-            Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-            // Navigator.pushReplacement(
-            //   context,
-            //   MaterialPageRoute<void>(
-            //     builder: (context) => HomePage(
-            //       languageCode: languageCode,
-            //       mainPageTitle: mainPageTitle,
-            //     ),
-            //   ),
-            // );
+            Navigator.of(context).popUntil((route) => route.isFirst);
           },
         ),
         ListTile(
-          leading: Icon(Icons.home_outlined),
+          leading: Icon(Icons.change_circle_outlined),
           title: Text('recent_changes'.tr()),
           onTap: () {
             Navigator.pop(context);
             launchUrl(Uri.parse(rcUrl));
           },
         ),
-        // CommunityToolsTile(
-        //   languageCode: languageCode,
-        //   title: recentChangesTitle,
-        //   label: 'recent_changes',
-        //   icon: Icon(Icons.home_outlined),
-        // ),
         ListTile(
-          leading: Icon(Icons.home_outlined),
+          leading: Icon(Icons.star_outlined),
           title: Text('special_pages'.tr()),
           onTap: () {
             Navigator.pop(context);
             launchUrl(Uri.parse(spUrl));
           },
         ),
-        // CommunityToolsTile(
-        //   languageCode: languageCode,
-        //   title: randomPageTitle,
-        //   label: 'random_page',
-        //   icon: Icon(Icons.home_outlined),
-        // ),
         CommunityToolsTile(
           languageCode: languageCode,
           title: communityPortalTitle,
           label: 'community_portal',
-          icon: Icon(Icons.home_outlined),
+          icon: Icon(Icons.groups_outlined),
         ),
         CommunityToolsTile(
           languageCode: languageCode,
           title: helpTitle,
           label: 'help',
-          icon: Icon(Icons.home_outlined),
+          icon: Icon(Icons.help_outline_outlined),
         ),
         CommunityToolsTile(
           languageCode: languageCode,
           title: sandboxTitle,
           label: 'sandbox',
-          icon: Icon(Icons.home_outlined),
+          icon: Icon(Icons.edit_outlined),
         ),
       ],
     );

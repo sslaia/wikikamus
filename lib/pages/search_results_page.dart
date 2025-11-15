@@ -24,14 +24,33 @@ class SearchResultsPage extends StatefulWidget {
 
 class _SearchResultsPageState extends State<SearchResultsPage> {
   final ApiService _apiService = ApiService();
+  final ScrollController _scrollController =
+      ScrollController();
   List<SearchResult> _searchResults = [];
   bool _isLoading = true;
   String _error = '';
+
+  int? _nextOffset;
+  bool _isFetchingMore = false;
 
   @override
   void initState() {
     super.initState();
     _fetchSearchResults();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent &&
+          _nextOffset != null &&
+          !_isFetchingMore) {
+        _fetchMoreSearchResults();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchSearchResults() async {
@@ -41,18 +60,43 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
     });
 
     try {
-      final results = await _apiService.searchWiktionary(
+      final searchData = await _apiService.searchWiktionary(
         languageCode: widget.languageCode,
         query: widget.query,
       );
       setState(() {
-        _searchResults = results;
+        _searchResults = searchData['results'] as List<SearchResult>;
+        _nextOffset = searchData['nextOffset'] as int?;
         _isLoading = false;
       });
     } catch (e) {
       setState(() {
         _error = 'search_error_occurred: $e'.tr();
         _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _fetchMoreSearchResults() async {
+    setState(() {
+      _isFetchingMore = true;
+    });
+
+    try {
+      final searchData = await _apiService.searchWiktionary(
+        languageCode: widget.languageCode,
+        query: widget.query,
+        sroffset: _nextOffset,
+      );
+      setState(() {
+        _searchResults.addAll(searchData['results'] as List<SearchResult>);
+        _nextOffset = searchData['nextOffset'] as int?;
+        _isFetchingMore = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = 'search_error_occurred: $e'.tr();
+        _isFetchingMore = false;
       });
     }
   }
@@ -78,7 +122,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
             ],
           ),
           body: _isLoading
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : _error.isNotEmpty
               ? Center(
                   child: Text(
@@ -90,40 +134,57 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                 )
               : _searchResults.isEmpty
               ? Center(child: Text('search_no_results').tr())
-              : ListView.builder(
-                  itemCount: _searchResults.length,
-                  itemBuilder: (context, index) {
-                    final result = _searchResults[index];
-                    final title = result.title;
-                    final decodeSnippet = HtmlCharacterEntities.decode(
-                      result.snippet,
-                    );
-                    final snippet = decodeSnippet.replaceAll(
-                      RegExp(r'<[^>]*>'),
-                      '',
-                    );
+              : Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        itemCount:
+                            _searchResults.length + (_isFetchingMore ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          if (index == _searchResults.length) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          }
 
-                    return ListTile(
-                      title: Text(title),
-                      subtitle: Text(
-                        snippet,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      onTap: () {
-                        // Navigate to WikiPage with the title
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WikiPage(
-                              languageCode: widget.languageCode,
-                              title: title,
+                          final result = _searchResults[index];
+                          final title = result.title;
+                          final decodeSnippet = HtmlCharacterEntities.decode(
+                            result.snippet,
+                          );
+                          final snippet = decodeSnippet.replaceAll(
+                            RegExp(r'<[^>]*>'),
+                            '',
+                          );
+
+                          return ListTile(
+                            title: Text(title),
+                            subtitle: Text(
+                              snippet,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                        );
-                      },
-                    );
-                  },
+                            onTap: () {
+                              // Navigate to WikiPage with the title
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WikiPage(
+                                    languageCode: widget.languageCode,
+                                    title: title,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
         ),
       ),

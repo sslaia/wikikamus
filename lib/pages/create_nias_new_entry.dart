@@ -1,18 +1,17 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class CreateNewEntry extends StatefulWidget {
-  const CreateNewEntry({super.key, this.title});
+class CreateNiasNewEntry extends StatefulWidget {
+  const CreateNiasNewEntry({super.key, this.title});
 
   final String? title;
 
   @override
-  State<CreateNewEntry> createState() => _CreateNewEntryState();
+  State<CreateNiasNewEntry> createState() => _CreateNiasNewEntryState();
 }
 
-class _CreateNewEntryState extends State<CreateNewEntry> {
+class _CreateNiasNewEntryState extends State<CreateNiasNewEntry> {
   final GlobalKey<ScaffoldState> _scaffoldFormKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
@@ -154,33 +153,22 @@ class _CreateNewEntryState extends State<CreateNewEntry> {
                     if (_formKey.currentState?.validate() ?? false) {
                       // Open the link in an external browser
                       launchUrl(Uri.parse(url));
-
-                      // launch in WevView
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) =>
-                      //         PageWebviewScreen(title: title, url: url, color: Theme.of(context).colorScheme.primary),
-                      //   ),
-                      // );
                     }
                   },
                   style: ElevatedButton.styleFrom(
                     // backgroundColor: Color(0xffe9d6ae),
                     foregroundColor: Theme.of(context).colorScheme.primary,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        5.0,
-                      ), // Set border radius to 0 for a square
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                   child: Text(
-                    'create_submit',
+                    'create_submit'.tr(),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w700,
                     ),
-                  ).tr(),
+                  ),
                 ),
               ],
             ),
