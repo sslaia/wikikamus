@@ -1,7 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:wikikamus/components/bottom_app_bar_label.dart';
 import 'package:wikikamus/components/drawer_about_section.dart';
 import 'package:wikikamus/components/drawer_community_tools_section.dart';
@@ -15,8 +16,12 @@ import 'package:wikikamus/components/refresh_home_icon_button.dart';
 import 'package:wikikamus/components/refresh_icon_button.dart';
 import 'package:wikikamus/components/share_icon_button.dart';
 import 'package:wikikamus/components/view_on_web_icon_button.dart';
+import 'package:wikikamus/components/wiktionary_search.dart';
+import 'package:wikikamus/pages/content_body.dart';
+import 'package:wikikamus/pages/image_page.dart';
+import 'package:wikikamus/pages/wiki_page.dart';
 import 'package:wikikamus/utils/processed_title.dart';
-import 'home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
 
 class IndonesianHomePageBuilder implements HomePageBuilder {
   @override
@@ -164,7 +169,41 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
   }
 
   @override
-  Widget buildBody(BuildContext context, Future<String> futureContent) {
+  Widget buildBody(
+    BuildContext context,
+    Future<String> futureContent,
+    PageType pageType,
+  ) {
+
+    void navigateToNewPage(String title) {
+      // Navigate to the new page
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute<void>(
+          builder: (context) => WikiPage(languageCode: 'id', title: title),
+        ),
+      );
+    }
+
+    void navigateToCreatePage(String title) {
+      final editUrl =
+          'https://id.m.wiktionary.org/w/index.php?title=$title&action=edit';
+      canLaunchUrl(Uri.parse(editUrl)).then((bool result) {
+        if (result) {
+          launchUrl(Uri.parse(editUrl));
+        } else {
+          print('Could not launch $editUrl');
+        }
+      });
+    }
+
+    void navigateToImagePage(String imgUrl) {
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (context) => ImagePage(imagePath: imgUrl),
+        ),
+      );
+    }
+
     return FutureBuilder<String>(
       future: futureContent,
       builder: (context, snapshot) {
@@ -182,25 +221,21 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
 
           return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: HtmlWidget(
-              pageContent,
-              buildAsync: true,
-              textStyle: GoogleFonts.ubuntu(
-                textStyle: Theme.of(context).textTheme.bodyMedium,
-              ),
-
-              /// Customization for mobile display
-              customStylesBuilder: (element) {
-                /// Reduce the size of all heading elements
-                /// as they appear too huge
-                if (element.localName == 'h1' ||
-                    element.localName == 'h2' ||
-                    element.localName == 'h3') {
-                  return {'font-size': '1.2em'};
-                }
-
-                return null;
-              },
+            child: Column(
+              children: [
+                if (pageType == PageType.home) ...[
+                  // IndonesiaMainHeader(),
+                  // const SizedBox(height: 28.0),
+                  WiktionarySearch(languageCode: 'id'),
+                  const SizedBox(height: 28.0),
+                ],
+                ContentBody(
+                  html: pageContent,
+                  onExistentLinkTap: navigateToNewPage,
+                  onNonExistentLinkTap: navigateToCreatePage,
+                  onImageLinkTap: navigateToImagePage,
+                ),
+              ],
             ),
           );
         }

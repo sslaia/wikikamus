@@ -17,7 +17,7 @@ import 'package:wikikamus/components/refresh_icon_button.dart';
 import 'package:wikikamus/components/share_icon_button.dart';
 import 'package:wikikamus/components/view_on_web_icon_button.dart';
 import 'package:wikikamus/utils/processed_title.dart';
-import 'home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
 
 /// The following default to id (Indonesian Wiktionary)
 class DefaultHomePageBuilder implements HomePageBuilder {
@@ -166,7 +166,8 @@ class DefaultHomePageBuilder implements HomePageBuilder {
   }
 
   @override
-  Widget buildBody(BuildContext context, Future<String> futureContent) {
+  Widget buildBody(BuildContext context, Future<String> futureContent,
+      PageType pageType) {
     return FutureBuilder<String>(
       future: futureContent,
       builder: (context, snapshot) {

@@ -1,18 +1,18 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wikikamus/components/open_drawer_button.dart';
-import 'package:wikikamus/components/random_icon_button.dart';
-import 'package:wikikamus/components/refresh_home_icon_button.dart';
+
+import 'package:wikikamus/services/api_service.dart';
+import 'package:wikikamus/services/cache_service.dart';
+import 'package:wikikamus/providers/settings_provider.dart';
 import 'package:wikikamus/components/spacer_image.dart';
-import 'package:wikikamus/components/wiktionary_search.dart';
 import 'package:wikikamus/data/footer.dart';
 import 'package:wikikamus/pages/home_page_builders/bew_home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/bjn_home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/btm_home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/default_home_page_builder.dart';
-
 import 'package:wikikamus/pages/home_page_builders/en_home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/gor_home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
@@ -23,11 +23,6 @@ import 'package:wikikamus/pages/home_page_builders/min_home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/ms_home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/nia_home_page_builder.dart';
 import 'package:wikikamus/pages/home_page_builders/su_home_page_builder.dart';
-import 'package:wikikamus/pages/wiki_page.dart';
-import 'package:wikikamus/services/api_service.dart';
-import 'package:wikikamus/services/cache_service.dart';
-
-import '../providers/settings_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -56,10 +51,6 @@ class _HomePageState extends State<HomePage> {
           SliverToBoxAdapter(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: WiktionarySearch(languageCode: languageCode),
-                ),
                 FutureBuilder<String>(
                   future: futureMainPageContent,
                   builder: (context, snapshot) {
@@ -76,9 +67,10 @@ class _HomePageState extends State<HomePage> {
                       return pageBuilder.buildBody(
                         context,
                         Future.value(snapshot.data!),
+                        PageType.home,
                       );
                     }
-                    return const Center(child: Text('No content available.'));
+                    return Center(child: Text('no_content_available.'.tr()));
                   },
                 ),
                 const SpacerImage(),

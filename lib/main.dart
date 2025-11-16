@@ -99,7 +99,7 @@ class MyApp extends StatelessWidget {
       theme: AppThemes.getLightTheme(fontScale),
       darkTheme: AppThemes.getDarkTheme(fontScale),
       themeMode: themeProvider.themeMode,
-        initialRoute: onboardingComplete ? '/settings' : '/settings',
+        initialRoute: onboardingComplete ? '/settings' : '/onboarding',
         routes: {
           '/': (context) => HomePage(),
           '/settings': (context) => const SettingsPage(),

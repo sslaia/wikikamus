@@ -21,12 +21,12 @@ class NiasPreprocessor implements HtmlPreprocessor {
 
       // Extract the relevant main content divs
       // final topBanner = body.find('div', attrs: {'id': 'mp-topbanner-container'});
-      final leftCol = body.find('div', attrs: {'id': 'mp-left'});
+      // final leftCol = body.find('div', attrs: {'id': 'mp-left'});
       final rightCol = body.find('div', attrs: {'id': 'mp-right'});
 
       // Combine the HTML of the elements we want to keep
       // final elements = [topBanner, leftCol, rightCol]
-      final elements = [leftCol, rightCol]
+      final elements = [rightCol]
           .where((element) => element != null)
           .map((element) => element!.outerHtml)
           .join('');

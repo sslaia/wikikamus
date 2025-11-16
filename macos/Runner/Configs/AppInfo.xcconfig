@@ -8,7 +8,7 @@
 PRODUCT_NAME = wikikamus
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = io.github.wikikamus
+PRODUCT_BUNDLE_IDENTIFIER = com.blogspot.wikikamus
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2025 io.github. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2025 com.blogspot. All rights reserved.

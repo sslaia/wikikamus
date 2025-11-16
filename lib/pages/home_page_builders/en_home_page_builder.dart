@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+
 import 'package:wikikamus/components/bottom_app_bar_label.dart';
 import 'package:wikikamus/components/drawer_about_section.dart';
 import 'package:wikikamus/components/drawer_community_tools_section.dart';
@@ -16,7 +17,7 @@ import 'package:wikikamus/components/refresh_icon_button.dart';
 import 'package:wikikamus/components/share_icon_button.dart';
 import 'package:wikikamus/components/view_on_web_icon_button.dart';
 import 'package:wikikamus/utils/processed_title.dart';
-import 'home_page_builder.dart';
+import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
 
 class EnglishHomePageBuilder implements HomePageBuilder {
   @override
@@ -164,7 +165,8 @@ class EnglishHomePageBuilder implements HomePageBuilder {
   }
 
   @override
-  Widget buildBody(BuildContext context, Future<String> futureContent) {
+  Widget buildBody(BuildContext context, Future<String> futureContent,
+      PageType pageType) {
     return FutureBuilder<String>(
       future: futureContent,
       builder: (context, snapshot) {

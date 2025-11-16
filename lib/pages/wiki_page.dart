@@ -59,7 +59,7 @@ class _WikiPageState extends State<WikiPage> {
       'min': MinangkabauHomePageBuilder(),
       'ms': MalayHomePageBuilder(),
       'nia': NiasHomePageBuilder(),
-      'su': SundaneseHomePageBuilder()
+      'su': SundaneseHomePageBuilder(),
     };
     return builder[languageCode] ?? DefaultHomePageBuilder();
   }
@@ -68,7 +68,10 @@ class _WikiPageState extends State<WikiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: _pageBuilder.buildDrawer(context),
-      bottomNavigationBar: _pageBuilder.buildWikiPageBottomAppBar(context, widget.title),
+      bottomNavigationBar: _pageBuilder.buildWikiPageBottomAppBar(
+        context,
+        widget.title,
+      ),
       body: CustomScrollView(
         slivers: [
           _pageBuilder.buildWikiPageAppBar(context, widget.title),
@@ -89,6 +92,7 @@ class _WikiPageState extends State<WikiPage> {
                   return _pageBuilder.buildBody(
                     context,
                     Future.value(snapshot.data!),
+                    PageType.wiki,
                   );
                 }
                 return Center(child: Text('no_content').tr());
