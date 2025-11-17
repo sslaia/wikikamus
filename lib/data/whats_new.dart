@@ -17,5 +17,5 @@ Sekarang ini konten halaman diunduh sekali seminggu.</li>
 <li>Mode gelap telah terintegrasi.</li>
 </ul>
 
-<p>The GitHub repository for the app is: <a href="https://github.com/sslaia/wikikamus">https://github.com/sslaia/wikikamus</a>.</p>
+<p>Repository aplikasi ini terdapat di <a href="https://github.com/sslaia/wikikamus">https://github.com/sslaia/wikikamus</a>.</p>
 ''';
