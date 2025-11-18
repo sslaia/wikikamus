@@ -24,7 +24,7 @@ class CacheService {
 
     if (cachedContent != null && timestamp != null) {
       final cachedTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-      if (now.difference(cachedTime).inDays < 0) {
+      if (now.difference(cachedTime).inDays < 1) {
         return cachedContent;
       }
     }

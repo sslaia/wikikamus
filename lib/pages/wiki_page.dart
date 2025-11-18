@@ -35,12 +35,12 @@ class _WikiPageState extends State<WikiPage> {
   void initState() {
     super.initState();
     _pageBuilder = _getPageBuilder(widget.languageCode);
-    fetchPageContent();
+    _futurePageContent = fetchPageContent();
   }
 
-  void fetchPageContent() async {
+  Future<String> fetchPageContent() async {
     final ApiService apiService = ApiService();
-    _futurePageContent = apiService.fetchPageContent(
+    return apiService.fetchPageContent(
       languageCode: widget.languageCode,
       title: widget.title,
     );
@@ -66,6 +66,7 @@ class _WikiPageState extends State<WikiPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       drawer: _pageBuilder.buildDrawer(context),
       bottomNavigationBar: _pageBuilder.buildWikiPageBottomAppBar(
@@ -75,29 +76,32 @@ class _WikiPageState extends State<WikiPage> {
       body: CustomScrollView(
         slivers: [
           _pageBuilder.buildWikiPageAppBar(context, widget.title),
-          SliverToBoxAdapter(
-            child: FutureBuilder<String>(
-              future: _futurePageContent,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    heightFactor: 10,
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
-                if (snapshot.hasData) {
-                  return _pageBuilder.buildBody(
+          FutureBuilder<String>(
+            future: _futurePageContent,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SliverFillRemaining(
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              if (snapshot.hasError) {
+                return SliverFillRemaining(
+                  child: Center(child: Text('Error: ${snapshot.error}')),
+                );
+              }
+              if (snapshot.hasData) {
+                return SliverToBoxAdapter(
+                  child: _pageBuilder.buildBody(
                     context,
                     Future.value(snapshot.data!),
                     PageType.wiki,
-                  );
-                }
-                return Center(child: Text('no_content').tr());
-              },
-            ),
+                  ),
+                );
+              }
+              return SliverFillRemaining(
+                child: Center(child: Text('no_content'.tr())),
+              );
+            },
           ),
         ],
       ),

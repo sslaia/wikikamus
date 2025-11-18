@@ -41,6 +41,15 @@ flutter:
     - assets/images/
     - assets/images/nias/
     - assets/translations/
+    - assets/translations/bew.json
+    - assets/translations/bjn.json
+    - assets/translations/btm.json
     - assets/translations/en.json
+    - assets/translations/gor.json
     - assets/translations/id.json
+    - assets/translations/jv.json
+    - assets/translations/mad.json
+    - assets/translations/min.json
+    - assets/translations/ms.json
     - assets/translations/nia.json
+    - assets/translations/su.json

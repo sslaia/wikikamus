@@ -81,7 +81,7 @@ class NiasHomePageBuilder implements HomePageBuilder {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: Text(
-        'Wikikamus Nias',
+        'Li Niha',
         style: GoogleFonts.cinzelDecorative(
           textStyle: Theme.of(context).textTheme.titleSmall,
           fontWeight: FontWeight.bold,

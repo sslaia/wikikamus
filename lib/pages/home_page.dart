@@ -48,39 +48,45 @@ class _HomePageState extends State<HomePage> {
       body: CustomScrollView(
         slivers: [
           pageBuilder.buildHomePageAppBar(context, mainPageTitle),
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                FutureBuilder<String>(
-                  future: futureMainPageContent,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        heightFactor: 10,
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    }
-                    if (snapshot.hasData) {
-                      return pageBuilder.buildBody(
+          FutureBuilder<String>(
+            future: futureMainPageContent,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SliverFillRemaining(
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              if (snapshot.hasError) {
+                return SliverFillRemaining(
+                  child: Center(child: Text('Error: ${snapshot.error}')),
+                );
+              }
+              if (snapshot.hasData) {
+                return SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      pageBuilder.buildBody(
                         context,
                         Future.value(snapshot.data!),
                         PageType.home,
-                      );
-                    }
-                    return Center(child: Text('no_content_available.'.tr()));
-                  },
-                ),
-                const SpacerImage(),
-                const SizedBox(height: 16.0),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: HtmlWidget(wikikamusFooter, textStyle: TextStyle(fontSize: 9.0)),
-                ),
-              ],
-            ),
+                      ),
+                      const SpacerImage(),
+                      const SizedBox(height: 16.0),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: HtmlWidget(
+                          wikikamusFooter,
+                          textStyle: const TextStyle(fontSize: 9.0),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return SliverFillRemaining(
+                child: Center(child: Text('no_content_available.'.tr())),
+              );
+            },
           ),
         ],
       ),
