@@ -1,4 +1,3 @@
-// A generic preprocessor for any Wiktionary we haven't made a custom one for yet.
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as parser;
 import 'html_preprocessor.dart';

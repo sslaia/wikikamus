@@ -79,7 +79,7 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: Text(
-        'Wikikamus Mandailing',
+        'Batak Mandailing',
         style: GoogleFonts.cinzelDecorative(
           textStyle: Theme.of(context).textTheme.titleSmall,
           fontWeight: FontWeight.bold,

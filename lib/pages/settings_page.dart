@@ -9,7 +9,6 @@ import 'package:wikikamus/providers/font_size_provider.dart';
 import 'package:wikikamus/providers/settings_provider.dart';
 import 'package:wikikamus/providers/theme_provider.dart';
 
-// A simple class to hold language data
 class Language {
   final String name;
   final String code;
@@ -20,7 +19,6 @@ class Language {
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
-  // A more appropriate list of languages for the region.
   static const List<Language> supportedLanguages = [
     Language(code: 'bew', name: 'Bahasa Betawi'),
     Language(code: 'bjn', name: 'Bahasa Banjar'),
@@ -236,9 +234,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       );
                     }).toList(),
                     onChanged: (String? newLanguageCode) async {
-                      if (newLanguageCode != null &&
-                          newLanguageCode != currentLanguageCode) {
-                        _selectLanguageAndNavigate(newLanguageCode);
+                      if (newLanguageCode != null) {
+                          _selectLanguageAndNavigate(newLanguageCode);
                       }
                     },
                   ),

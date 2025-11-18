@@ -80,10 +80,6 @@ class _CreateNewPageState extends State<CreateNewPage> {
                 ElevatedButton(
                   onPressed: () {
                     String title = _titleController.text.toLowerCase();
-                    String capitalizedTitle = title
-                        .split(" ")
-                        .map((word) => word.capitalize())
-                        .join(" ");
                     if (_formKey.currentState?.validate() ?? false) {
                       Navigator.pop(context);
                       // Open the link in an external browser
@@ -91,14 +87,14 @@ class _CreateNewPageState extends State<CreateNewPage> {
                         launchUrl(
                           Uri.parse(
                             '${widget
-                                .url}$capitalizedTitle?action=edit&section=all&${widget.form}',
+                                .url}$title?action=edit&section=all&${widget.form}',
                           ),
                         );
                       } else {
                         launchUrl(
                           Uri.parse(
                             '${widget
-                                .url}$capitalizedTitle?action=edit&section=all',
+                                .url}$title?action=edit&section=all',
                           ),
                         );
                       }

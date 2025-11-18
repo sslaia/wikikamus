@@ -14,6 +14,7 @@ import 'package:wikikamus/components/open_drawer_button.dart';
 import 'package:wikikamus/components/random_icon_button.dart';
 import 'package:wikikamus/components/refresh_home_icon_button.dart';
 import 'package:wikikamus/components/refresh_icon_button.dart';
+import 'package:wikikamus/components/search_and_create_icon_button.dart';
 import 'package:wikikamus/components/share_icon_button.dart';
 import 'package:wikikamus/components/view_on_web_icon_button.dart';
 import 'package:wikikamus/components/wiktionary_search.dart';
@@ -96,7 +97,7 @@ class NiasHomePageBuilder implements HomePageBuilder {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Image.asset(
-                  'assets/images/nias/baluse.webp',
+                  "assets/images/nias/ni'obutelai.webp",
                   fit: BoxFit.fitWidth,
                   width: double.infinity,
                   height: 200,
@@ -132,6 +133,7 @@ class NiasHomePageBuilder implements HomePageBuilder {
     final List<Widget> barChildren = [
       OpenDrawerButton(),
       BottomAppBarLabel(),
+      SearchAndCreateIconButton(languageCode: 'nia'),
       RefreshHomeIconButton(),
       RandomIconButton(languageCode: 'nia'),
     ];
@@ -143,6 +145,7 @@ class NiasHomePageBuilder implements HomePageBuilder {
     final List<Widget> barChildren = [
       BottomAppBarLabel(),
       HomeIconButton(),
+      SearchAndCreateIconButton(languageCode: 'nia'),
       RefreshIconButton(languageCode: 'nia', title: title),
       RandomIconButton(languageCode: 'nia'),
     ];
@@ -223,8 +226,8 @@ class NiasHomePageBuilder implements HomePageBuilder {
                 if (pageType == PageType.home) ...[
                   NiasMainHeader(),
                   const SizedBox(height: 28.0),
-                  WiktionarySearch(languageCode: 'nia'),
-                  const SizedBox(height: 28.0),
+                  // WiktionarySearch(languageCode: 'nia'),
+                  // const SizedBox(height: 28.0),
                 ],
                 ContentBody(
                   html: pageContent,
@@ -234,136 +237,6 @@ class NiasHomePageBuilder implements HomePageBuilder {
                 ),
               ],
             ),
-            // child: HtmlWidget(
-            //   pageContent,
-            //   renderMode: RenderMode.column,
-            //   buildAsync: true,
-            //   textStyle: GoogleFonts.ubuntu(textStyle: Theme.of(context).textTheme.bodyMedium),
-            //
-            //   /// Customization for mobile display
-            //   customStylesBuilder: (element) {
-            //     /// Reduce the size of all heading elements
-            //     /// as they appear too huge on mobile screens
-            //     if (element.localName == 'h1' ||
-            //         element.localName == 'h2' ||
-            //         element.localName == 'h3') {
-            //       return {'font-size': '1.2em'};
-            //     }
-            //
-            //     return null;
-            //   },
-            //
-            //   /// Handling of links
-            //   onTapUrl: (url) async {
-            //     final uri = Uri.parse(url);
-            //
-            //     // Handle links that start with "./" (the main page)
-            //     if (url.startsWith('./')) {
-            //       final title = url.substring(2);
-            //
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //           builder: (context) => WikiPage(
-            //             languageCode: 'nia',
-            //             title: title,
-            //           ),
-            //         ),
-            //       );
-            //       return true;
-            //     }
-            //
-            //     // Handle existent internal wiki links (the wikip age)
-            //     if (uri.path.startsWith('/wiki/')) {
-            //       final title = uri.pathSegments.last;
-            //
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //           builder: (context) => WikiPage(
-            //             languageCode: 'nia',
-            //             title: title,
-            //           ),
-            //         ),
-            //       );
-            //       return true;
-            //     }
-            //
-            //     // Handle non-existent internal wiki links (the wiki page)
-            //     if (uri.path.startsWith('/w/')) {
-            //       final title = getLowercaseTitleFromUrl(url);
-            //
-            //       // temp solution before languageCode is set
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //           builder: (context) => CreateNiasNewEntry(title: title),
-            //         ),
-            //       );
-            //
-            //       /// For Nias Wikionary open the title in create new page form
-            //       /// otherwise send the title to external browser for edit
-            //       // if (languageCode == 'nia') {
-            //       //   Navigator.push(
-            //       //     context,
-            //       //     MaterialPageRoute(
-            //       //       builder: (context) => CreateNiasNewEntry(title: title),
-            //       //     ),
-            //       //   );
-            //       // } else {
-            //       //   final editUrl = 'https://$languageCode.m.wiktionary.org/w/index.php?title=$title&action=edit';
-            //       //   canLaunchUrl(Uri.parse(url)).then((bool result) {
-            //       //     if (result) {
-            //       //       launchUrl(Uri.parse(editUrl));
-            //       //     } else {
-            //       //       print('Could not launch $editUrl');
-            //       //     }
-            //       //   });
-            //       // }
-            //
-            //       return true;
-            //     }
-            //
-            //     // For all other external links, launch them in a browser
-            //     try {
-            //       final launchable = await canLaunchUrl(uri);
-            //       if (launchable) {
-            //         await launchUrl(uri);
-            //       } else {
-            //         if (context.mounted) {
-            //           ScaffoldMessenger.of(context).showSnackBar(
-            //             SnackBar(
-            //               content: Text('url_launch_error'.tr()),
-            //               behavior: SnackBarBehavior.floating,
-            //             ),
-            //           );
-            //         }
-            //       }
-            //     } catch (e) {
-            //       if (context.mounted) {
-            //         ScaffoldMessenger.of(context).showSnackBar(
-            //           SnackBar(
-            //             content: Text('url_launch_error'.tr()),
-            //             behavior: SnackBarBehavior.floating,
-            //           ),
-            //         );
-            //       }
-            //     }
-            //
-            //     return true;
-            //   },
-            //
-            //   /// Handling of images
-            //   onTapImage: (image) {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (context) => ImagePage(imagePath: image.sources.first.url),
-            //       ),
-            //     );
-            //   },
-            //
-            // ),
           );
         }
         return Center(child: Text('no_data'.tr()));

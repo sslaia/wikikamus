@@ -64,6 +64,16 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
         languageCode: widget.languageCode,
         query: widget.query,
       );
+
+      if (searchData == null) {
+        setState(() {
+          _searchResults = [];
+          _nextOffset = null;
+          _isLoading = false;
+        });
+        return;
+      }
+
       setState(() {
         _searchResults = searchData['results'] as List<SearchResult>;
         _nextOffset = searchData['nextOffset'] as int?;
@@ -71,13 +81,15 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
       });
     } catch (e) {
       setState(() {
-        _error = 'search_error_occurred: $e'.tr();
+        _error = '${'search_error_occurred'.tr()}: $e';
         _isLoading = false;
       });
     }
   }
 
   Future<void> _fetchMoreSearchResults() async {
+    if (_nextOffset == null || _isFetchingMore) return;
+
     setState(() {
       _isFetchingMore = true;
     });
@@ -88,6 +100,15 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
         query: widget.query,
         sroffset: _nextOffset,
       );
+
+      if (searchData == null) {
+        setState(() {
+          _nextOffset = null;
+          _isFetchingMore = false;
+        });
+        return;
+      }
+
       setState(() {
         _searchResults.addAll(searchData['results'] as List<SearchResult>);
         _nextOffset = searchData['nextOffset'] as int?;
@@ -95,7 +116,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
       });
     } catch (e) {
       setState(() {
-        _error = 'search_error_occurred: $e'.tr();
+        _error = '${'search_error_occurred'.tr()}: $e';
         _isFetchingMore = false;
       });
     }

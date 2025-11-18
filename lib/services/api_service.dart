@@ -11,6 +11,8 @@ import 'package:wikikamus/services/html_preprocessors/nia_preprocessor.dart';
 import 'package:wikikamus/services/html_preprocessors/default_preprocessor.dart';
 
 class ApiService {
+  final http.Client _client;
+
   /// A map to hold our preprocessor
   /// The purpose of this is to allow each language to have its own strategy
   /// how to process the page
@@ -29,7 +31,7 @@ class ApiService {
     // 'su': SundanesePreprocessor()
   };
 
-  ApiService();
+  ApiService({http.Client? client}) : _client = client ?? http.Client();
 
   /// This private helper method selects the correct strategy
   HtmlPreprocessor _getPreprocessorFor(String languageCode) {
@@ -52,7 +54,6 @@ class ApiService {
 
     final preprocessor = _getPreprocessorFor(languageCode);
     final processedHtml = preprocessor.process(rawHtml);
-
     return processedHtml;
   }
 
@@ -66,7 +67,13 @@ class ApiService {
       languageCode: languageCode,
       title: title,
     );
-    return rawHtml;
+    if (rawHtml.toLowerCase().startsWith('error:')) {
+      return rawHtml;
+    }
+
+    final preprocessor = _getPreprocessorFor(languageCode);
+    final processedHtml = preprocessor.process(rawHtml);
+    return processedHtml;
   }
 
   /// Private helper to get page raw content from the MediaWiki API.
@@ -245,40 +252,50 @@ class ApiService {
   }
 
   /// Search for a page on Wiktionary
-  Future<Map<String, dynamic>> searchWiktionary({
+  Future<Map<String, dynamic>?> searchWiktionary({
     required String languageCode,
     required String query,
     int? sroffset,
   }) async {
-    final Map<String, String> params = {
-      'action': 'query',
-      'list': 'search',
-      'srsearch': query,
-      'format': 'json',
-      'utf8': '1',
-    };
+    final uri = Uri.https(
+      '$languageCode.wiktionary.org',
+      '/w/api.php',
+      {
+        'action': 'query',
+        'list': 'search',
+        'srsearch': query,
+        'srnamespace': '0',
+        'format': 'json',
+        'srlimit': '20', // Fetch 20 results at a time
+        if (sroffset != null) 'sroffset': sroffset.toString(),
+      },
+    );
 
-    if (sroffset != null) {
-      params['sroffset'] = sroffset.toString();
-    }
+    try {
+      final response = await _client.get(uri);
 
-    final Uri url = Uri.https('$languageCode.m.wiktionary.org', '/w/api.php', params);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
 
-    final response = await http.get(url);
+        if (data['query'] == null || data['query']['search'] == null) {
+          return null;
+        }
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      final List<SearchResult> results = await parseSearch(response.body);
-      final int? nextOffset = data['continue']['sroffset'] as int?;
+        final List<SearchResult> results = (data['query']['search'] as List)
+            .map((item) => SearchResult.fromJson(item))
+            .toList();
 
-      return {
-        'results': results,
-        'nextOffset': nextOffset,
-      };
-    } else {
-      throw Exception(
-        'Failed to load search results. Status code: ${response.statusCode}',
-      );
+        final int? nextOffset = data['continue']?['sroffset'];
+
+        return {
+          'results': results,
+          'nextOffset': nextOffset,
+        };
+      } else {
+        throw Exception('Failed to load search results: ${response.statusCode}');
+      }
+    } catch (e) {
+      return null;
     }
   }
 
