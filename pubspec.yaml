@@ -1,5 +1,5 @@
 name: wikikamus
-description: "An app for Wikikamus"
+description: "An app for Wikikamus, the wiktionaries of local languages in Indonesia"
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -13,6 +13,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  flutter_dotenv: ^6.0.0
   flutter_appauth: ^11.0.0
   flutter_secure_storage: ^9.2.4
   provider: ^6.1.5+1
@@ -38,6 +39,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - wikikamus.env
     - assets/images/
     - assets/images/nias/
     - assets/translations/

@@ -31,9 +31,9 @@ class ContentBody extends StatelessWidget {
         html,
         buildAsync: true,
         renderMode: RenderMode.column,
-        textStyle: GoogleFonts.gelasio(
-          textStyle: Theme.of(context).textTheme.bodyMedium,
-        ),
+        // textStyle: GoogleFonts.gelasio(
+        //   textStyle: Theme.of(context).textTheme.bodyMedium,
+        // ),
 
         /// Customization for mobile display
         customStylesBuilder: (element) {

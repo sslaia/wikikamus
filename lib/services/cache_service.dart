@@ -36,10 +36,8 @@ class CacheService {
     );
 
     /// Save the new content to cache before returning.
-    if (!networkContent.toLowerCase().startsWith('error:')) {
-      await _prefs.setString(contentKey, networkContent);
-      await _prefs.setInt(timestampKey, now.millisecondsSinceEpoch);
-    }
+    await _prefs.setString(contentKey, networkContent);
+    await _prefs.setInt(timestampKey, now.millisecondsSinceEpoch);
 
     return networkContent;
   }
@@ -49,6 +47,9 @@ class CacheService {
     required String languageCode,
     required String title,
   }) async {
-    return _apiService.fetchPageContent(languageCode: languageCode, title: title);
+    return _apiService.fetchPageContent(
+      languageCode: languageCode,
+      title: title,
+    );
   }
 }

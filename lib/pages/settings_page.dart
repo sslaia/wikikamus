@@ -50,13 +50,14 @@ class _SettingsPageState extends State<SettingsPage> {
       context,
       listen: false,
     );
-    settingsProvider.updateLanguage(languageCode, context);
+    settingsProvider.setLanguage(languageCode);
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('onboarding_complete', true);
 
     if (!mounted) return;
-
+    await context.setLocale(Locale(languageCode));
+    
     Navigator.of(
       context,
     ).pushReplacement(MaterialPageRoute(builder: (context) => const HomePage()));
@@ -65,8 +66,8 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    // Get the current language code directly from the EasyLocalization context.
-    final String currentLanguageCode = context.locale.languageCode;
+    final settingsProvider = Provider.of<SettingsProvider>(context);
+    final String currentLanguageCode = settingsProvider.activeLanguageCode;
 
     return Scaffold(
       appBar: AppBar(title: Text('settings'.tr())),

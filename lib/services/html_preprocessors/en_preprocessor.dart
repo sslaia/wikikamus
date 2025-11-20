@@ -9,11 +9,9 @@ class EnglishPreprocessor implements HtmlPreprocessor {
       final body = soup.body;
       if (body == null) return '';
 
-      // A Set is used to automatically handle duplicates if an element has multiple desired classes.
       final Set<Bs4Element> contentElements = {};
 
-      // Find all elements first, then filter them by class.
-      // This is a robust way that relies on standard Dart methods.
+      // Find all elements that will be shown in the app
       body.findAll('*').forEach((element) {
         String? elementClasses = element.attributes['class'];
         if (elementClasses != null) {
@@ -26,13 +24,12 @@ class EnglishPreprocessor implements HtmlPreprocessor {
       });
 
       if (contentElements.isEmpty) {
-        return rawHtml; // Fallback if nothing was found
+        return rawHtml;
       }
 
-      // Combine the outer HTML of the found elements
       return contentElements.map((e) => e.outerHtml).join('');
     } catch (e) {
-      return 'Error processing English HTML: $e';
+      return 'Error processing the HTML: $e';
     }
   }
 }

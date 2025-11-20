@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:wikikamus/components/bottom_app_bar_label.dart';
+import 'package:wikikamus/components/create_page_icon_button.dart';
 import 'package:wikikamus/components/drawer_about_section.dart';
 import 'package:wikikamus/components/drawer_community_tools_section.dart';
 import 'package:wikikamus/components/drawer_header_section.dart';
@@ -14,8 +15,9 @@ import 'package:wikikamus/components/open_drawer_button.dart';
 import 'package:wikikamus/components/random_icon_button.dart';
 import 'package:wikikamus/components/refresh_home_icon_button.dart';
 import 'package:wikikamus/components/refresh_icon_button.dart';
-import 'package:wikikamus/components/search_and_create_icon_button.dart';
+import 'package:wikikamus/components/search_icon_button.dart';
 import 'package:wikikamus/components/share_icon_button.dart';
+import 'package:wikikamus/components/spacer_color_bar.dart';
 import 'package:wikikamus/components/view_on_web_icon_button.dart';
 import 'package:wikikamus/components/wiktionary_search.dart';
 import 'package:wikikamus/pages/content_body.dart';
@@ -31,7 +33,7 @@ class NiasHomePageBuilder implements HomePageBuilder {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: Text(
-        'nias'.tr(),
+        'Wikikamus li Niha',
         style: GoogleFonts.cinzelDecorative(
           textStyle: Theme.of(context).textTheme.displayLarge,
           fontWeight: FontWeight.bold,
@@ -133,7 +135,8 @@ class NiasHomePageBuilder implements HomePageBuilder {
     final List<Widget> barChildren = [
       OpenDrawerButton(),
       BottomAppBarLabel(),
-      SearchAndCreateIconButton(languageCode: 'nia'),
+      CreatePageIconButton(destination: CreateNiasNewEntry()),
+      // SearchAndCreateIconButton(languageCode: 'nia'),
       RefreshHomeIconButton(),
       RandomIconButton(languageCode: 'nia'),
     ];
@@ -145,7 +148,7 @@ class NiasHomePageBuilder implements HomePageBuilder {
     final List<Widget> barChildren = [
       BottomAppBarLabel(),
       HomeIconButton(),
-      SearchAndCreateIconButton(languageCode: 'nia'),
+      SearchIconButton(languageCode: 'nia'),
       RefreshIconButton(languageCode: 'nia', title: title),
       RandomIconButton(languageCode: 'nia'),
     ];
@@ -168,6 +171,7 @@ class NiasHomePageBuilder implements HomePageBuilder {
       ),
       DrawerSettingsSection(),
       DrawerAboutSection(),
+      // DrawerAuthSection(),
     ];
     return Drawer(child: ListView(children: drawerChildren));
   }
@@ -226,8 +230,9 @@ class NiasHomePageBuilder implements HomePageBuilder {
                 if (pageType == PageType.home) ...[
                   NiasMainHeader(),
                   const SizedBox(height: 28.0),
-                  // WiktionarySearch(languageCode: 'nia'),
-                  // const SizedBox(height: 28.0),
+                  WiktionarySearch(languageCode: 'nia'),
+                  const SizedBox(height: 28.0),
+                  SpacerColorBar(imageWidth: double.infinity),
                 ],
                 ContentBody(
                   html: pageContent,

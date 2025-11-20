@@ -6,34 +6,22 @@ class NiasPreprocessor implements HtmlPreprocessor {
   String process(String rawHtml) {
     try {
       final soup = BeautifulSoup(rawHtml);
-      final root = soup.body ?? soup;
-
-      // Remove edit text buttons, as they are irrelevant in display mode
-      final editSections = root.findAll('*', attrs: {'class': 'mw-editsection'});
-      for (var editSection in editSections) {
-        editSection.extract();
+      final root = soup.body;
+      if (root == null) {
+        return '';
       }
 
-      // Remove table of contents as they annoyingly occupies the whole screen
-      // (usually appeared on Nias wiktionary pages)
-      final tableOfContents = root.findAll('*', attrs: {'class': 'toc'});
-      for (var tocElement in tableOfContents) {
-        tocElement.extract();
-      }
-      final toc = root.findAll('*', attrs: {'id': 'toc'});
-      for (var tocElement in toc) {
-        tocElement.extract();
-      }
+      // Remove edit text buttons
+      _removeElements(root, '.mw-editsection');
 
-      // --- Handle the main page -- //
+      // Remove table of contents
+      _removeElements(root, '.toc, #toc');
 
-      // Find all <section> tags that are explicitly hidden
-      // final hiddenSections = root.findAll('section', attrs: {
-      //   'style': 'display: none;',
-      // });
-      // for (var section in hiddenSections) {
-      //   section.attributes.remove('style');
-      // }
+      // Remove empty sections marked with "Lö hadöi"
+      _removeEmptySections(root);
+
+      // Remove empty Gambara sections
+      _removeEmptyImageSections(root);
 
       /// The following solution is for extracting
       /// the top, left and right columns contents
@@ -64,15 +52,69 @@ class NiasPreprocessor implements HtmlPreprocessor {
           section.attributes.remove('style');
         }
 
-        // Return only the HTML of the processed right column
         return mainPageRightColumn.outerHtml;
       } else {
-        // IT'S AN ARTICLE PAGE: Return the whole cleaned content
-        // The universal cleaning has already run.
         return root.toString();
       }
     } catch (e) {
       return 'Error processing Nias HTML: $e';
+    }
+  }
+
+  /// Helper function to remove all elements matching a CSS selector.
+  void _removeElements(Bs4Element root, String selector) {
+    root.findAll(selector).forEach((element) => element.extract());
+  }
+
+  /// Helper function to find and remove headings followed by "Lö hadöi"
+  /// in either <dd> or <li> tags.
+  void _removeEmptySections(Bs4Element root) {
+    // Find all 'dd' and 'li' elements.
+    final potentialMarkers = root.findAll('dd') + root.findAll('li');
+
+    // Use Dart's .where() to filter them based on their content
+    final emptyMarkers = potentialMarkers.where((element) {
+      return element.string.trim() == 'Lö hadöi';
+    });
+
+    for (final marker in emptyMarkers) {
+      Bs4Element? listContainer;
+
+      // Determine the parent list container
+      if (marker.name == 'dd') {
+        listContainer = marker.findParent('dl');
+      } else if (marker.name == 'li') {
+        // It could be in a <ul> or <ol>
+        listContainer = marker.findParent('ul') ?? marker.findParent('ol');
+      }
+
+      if (listContainer == null) continue;
+
+      // Find the heading element that comes just before the list container
+      final headingDiv = listContainer.findPreviousSibling('div');
+
+      // To be safe, check if the found sibling is actually a heading container.
+      if (headingDiv != null && headingDiv.className.contains('mw-heading')) {
+        // Remove the heading and the list container.
+        headingDiv.extract();
+        listContainer.extract();
+      }
+    }
+  }
+
+  /// Helper function to remove the "Gambara" heading if it has no pictures.
+  void _removeEmptyImageSections(Bs4Element root) {
+    final imageHeadings = root.findAll('h3', id: 'Gambara');
+
+    for (final h3 in imageHeadings) {
+      final headingContainer = h3.findParent('div');
+      if (headingContainer == null) continue;
+
+      final Bs4Element? nextElement = headingContainer.nextSibling;
+
+      if (nextElement == null || nextElement.name != 'figure') {
+        headingContainer.extract();
+      }
     }
   }
 }

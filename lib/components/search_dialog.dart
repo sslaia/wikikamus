@@ -1,23 +1,21 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wikikamus/pages/search_results_page.dart';
 
-class SearchAndCreateDialog extends StatefulWidget {
+class SearchDialog extends StatefulWidget {
   final String languageCode;
 
-  const SearchAndCreateDialog({
+  const SearchDialog({
     super.key,
     required this.languageCode,
   });
 
   @override
-  State<SearchAndCreateDialog> createState() => _SearchAndCreateDialogState();
+  State<SearchDialog> createState() => _SearchDialogState();
 }
 
-class _SearchAndCreateDialogState extends State<SearchAndCreateDialog> {
+class _SearchDialogState extends State<SearchDialog> {
   final _searchController = TextEditingController();
-  final _createController = TextEditingController();
   final _searchFocusNode = FocusNode();
 
   @override
@@ -29,7 +27,6 @@ class _SearchAndCreateDialogState extends State<SearchAndCreateDialog> {
   @override
   void dispose() {
     _searchController.dispose();
-    _createController.dispose();
     _searchFocusNode.dispose();
     super.dispose();
   }
@@ -49,27 +46,13 @@ class _SearchAndCreateDialogState extends State<SearchAndCreateDialog> {
     }
   }
 
-  // Action for the "Create" field
-  void _submitCreate(String title) {
-    final newTitle = title.trim().toLowerCase();
-
-    if (newTitle.isNotEmpty) {
-      final createUrl =
-          'https://${widget.languageCode}.m.wiktionary.org/w/index.php?title=$newTitle&action=edit';
-      Navigator.of(context).pop();
-      launchUrl(Uri.parse(createUrl));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('search_and_create_page'.tr()),
+      title: Text('search_wiki'.tr()),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('search_wiki'.tr(), style: TextStyle(fontWeight: FontWeight.bold)),
           TextField(
             controller: _searchController,
             focusNode: _searchFocusNode,
@@ -82,19 +65,6 @@ class _SearchAndCreateDialogState extends State<SearchAndCreateDialog> {
               suffixIcon: Icon(Icons.search),
             ),
             onSubmitted: _submitSearch,
-          ),
-          const SizedBox(height: 32), // Spacer between the fields
-          Text('create'.tr(), style: TextStyle(fontWeight: FontWeight.bold)),
-          TextField(
-            controller: _createController,
-            decoration: InputDecoration(
-              labelText: 'create_new_entry'.tr(),
-              hintText: 'enter_a_word_to_create'.tr(),
-              hintStyle: TextStyle(fontSize: 11.0, color: Theme.of(context).colorScheme.tertiary),
-              border: OutlineInputBorder(),
-              suffixIcon: Icon(Icons.add_outlined),
-            ),
-            onSubmitted: _submitCreate,
           ),
         ],
       ),

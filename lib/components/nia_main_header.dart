@@ -13,7 +13,7 @@ class NiasMainHeader extends StatelessWidget {
 
     return Column(
       children: [
-        NormalText(text: 'greeting'),
+        NormalText(text: 'greeting_nias'),
         const SizedBox(height: 16.0),
         Text(
             'Wikikamus Nias',
@@ -26,8 +26,8 @@ class NiasMainHeader extends StatelessWidget {
             textAlign: TextAlign.center,
         ),
         const SizedBox(height: 16.0),
-        NormalText(text: 'goal'),
-        NormalText(text: 'motto'),
+        NormalText(text: 'goal_nias'),
+        NormalText(text: 'motto_nias'),
       ],
     );
   }
@@ -40,9 +40,9 @@ class NormalText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      text,
+      text.tr(),
       style: Theme.of(context).textTheme.bodySmall,
       textAlign: TextAlign.center,
-    ).tr();
+    );
   }
 }

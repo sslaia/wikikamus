@@ -14,6 +14,7 @@ import 'package:wikikamus/components/open_drawer_button.dart';
 import 'package:wikikamus/components/random_icon_button.dart';
 import 'package:wikikamus/components/refresh_home_icon_button.dart';
 import 'package:wikikamus/components/refresh_icon_button.dart';
+import 'package:wikikamus/components/search_and_create_icon_button.dart';
 import 'package:wikikamus/components/share_icon_button.dart';
 import 'package:wikikamus/components/view_on_web_icon_button.dart';
 import 'package:wikikamus/components/wiktionary_search.dart';
@@ -131,6 +132,7 @@ class SundaneseHomePageBuilder implements HomePageBuilder {
     final List<Widget> barChildren = [
       OpenDrawerButton(),
       BottomAppBarLabel(),
+      SearchAndCreateIconButton(languageCode: 'su'),
       RefreshHomeIconButton(),
       RandomIconButton(languageCode: 'su'),
     ];
@@ -142,6 +144,7 @@ class SundaneseHomePageBuilder implements HomePageBuilder {
     final List<Widget> barChildren = [
       BottomAppBarLabel(),
       HomeIconButton(),
+      SearchAndCreateIconButton(languageCode: 'su'),
       RefreshIconButton(languageCode: 'su', title: title),
       RandomIconButton(languageCode: 'su'),
     ];

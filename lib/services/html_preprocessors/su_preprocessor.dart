@@ -1,7 +1,7 @@
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'html_preprocessor.dart';
 
-class DefaultPreprocessor implements HtmlPreprocessor {
+class SundanesePreprocessor implements HtmlPreprocessor {
   @override
   String process(String rawHtml) {
     try {
@@ -11,14 +11,16 @@ class DefaultPreprocessor implements HtmlPreprocessor {
         return '';
       }
 
-      /// Basic filtering
+      /// Di bawah ini adalah kode untuk menyaring konten halaman wiki secara umum
+      /// yang berlaku untuk semua situs Wiktionary.
 
-      // Remove the edit button
+      // Hapus tombol/pranala "[sunting]" (edit section links)
       _removeElements(root, '.mw-editsection');
 
-      // Remove the table of contents
+      // Hapus daftar isi (table of contents)
       _removeElements(root, '.toc, #toc');
 
+      // Kembalikan konten di dalam <body>
       return root.toString();
 
     } catch (e) {

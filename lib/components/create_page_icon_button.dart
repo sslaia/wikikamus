@@ -11,7 +11,7 @@ class CreatePageIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
         tooltip: 'create_new_page'.tr(),
-        icon: Icon(Icons.edit_outlined),
+        icon: Icon(Icons.edit_note_outlined),
         color: Theme.of(context).colorScheme.primary,
         onPressed: () {
           Navigator.push(

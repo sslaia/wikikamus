@@ -14,6 +14,7 @@ import 'package:wikikamus/components/open_drawer_button.dart';
 import 'package:wikikamus/components/random_icon_button.dart';
 import 'package:wikikamus/components/refresh_home_icon_button.dart';
 import 'package:wikikamus/components/refresh_icon_button.dart';
+import 'package:wikikamus/components/search_and_create_icon_button.dart';
 import 'package:wikikamus/components/share_icon_button.dart';
 import 'package:wikikamus/components/view_on_web_icon_button.dart';
 import 'package:wikikamus/utils/processed_title.dart';
@@ -128,6 +129,7 @@ class DefaultHomePageBuilder implements HomePageBuilder {
     final List<Widget> barChildren = [
       OpenDrawerButton(),
       BottomAppBarLabel(),
+      SearchAndCreateIconButton(languageCode: 'id'),
       RefreshHomeIconButton(),
       RandomIconButton(languageCode: 'id'),
     ];
@@ -139,6 +141,7 @@ class DefaultHomePageBuilder implements HomePageBuilder {
     final List<Widget> barChildren = [
       BottomAppBarLabel(),
       HomeIconButton(),
+      SearchAndCreateIconButton(languageCode: 'id'),
       RefreshIconButton(languageCode: 'id', title: title),
       RandomIconButton(languageCode: 'id'),
     ];

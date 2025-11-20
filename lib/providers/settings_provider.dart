@@ -1,38 +1,30 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsProvider with ChangeNotifier {
-  String _activeLanguageCode = 'id';
-  String _mainPageTitle = 'Halaman_Utama';
+  late SharedPreferences _prefs;
 
+  bool _isLoading = true;
+  bool get isLoading => _isLoading;
+
+  String _activeLanguageCode = 'id';
   String get activeLanguageCode => _activeLanguageCode;
+
+  String _mainPageTitle = 'Wikikamus:Halaman_Utama';
   String get mainPageTitle => _mainPageTitle;
 
   Future<void> loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    _activeLanguageCode = prefs.getString('user_language_code') ?? 'id';
-    _mainPageTitle = prefs.getString('user_main_page_title') ?? 'Halaman_Utama';
+    _prefs = await SharedPreferences.getInstance();
+    _activeLanguageCode = _prefs.getString('user_language_code') ?? 'id';
+    _mainPageTitle = _prefs.getString('user_main_page_title') ?? 'Wikikamus:Halaman_Utama';
   }
 
-  Future<void> updateLanguage(String newLanguageCode, BuildContext context) async {
-    // Update internal state
-    _activeLanguageCode = newLanguageCode;
-    _mainPageTitle = getMainPageTitleForCode(newLanguageCode);
-
-    // Persist the state
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_language_code', _activeLanguageCode);
-    await prefs.setString('user_main_page_title', _mainPageTitle);
-
-    // Update EasyLocalization
-    await context.setLocale(Locale(_activeLanguageCode));
-
-    notifyListeners();
-  }
-
-  void setActiveLanguageCode(String code) {
-    _activeLanguageCode = code;
+  Future<void> setLanguage(String languageCode) async {
+    _prefs = await SharedPreferences.getInstance();
+    _activeLanguageCode = languageCode;
+    _mainPageTitle = getMainPageTitleForCode(languageCode);
+    _prefs.setString('user_language_code', languageCode);
+    _prefs.setString('user_main_page_title', _mainPageTitle);
     notifyListeners();
   }
 

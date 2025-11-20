@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +17,8 @@ import 'package:wikikamus/pages/settings_page.dart';
 import 'package:wikikamus/localizations/nia_material_localizations.dart';
 import 'package:wikikamus/pages/onboarding_page.dart';
 import 'package:wikikamus/pages/home_page.dart';
+import 'package:wikikamus/pages/splash_page.dart';
+import 'package:wikikamus/providers/auth_provider.dart';
 import 'package:wikikamus/providers/font_size_provider.dart';
 import 'package:wikikamus/providers/settings_provider.dart';
 import 'package:wikikamus/providers/theme_provider.dart';
@@ -29,11 +32,29 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final initialLanguageCode = settingsProvider.activeLanguageCode;
+  // Load environment variables from .env file
+  try {
+    await dotenv.load(fileName: "wikikamus.env");
+  } catch (e) {
+    print("Error loading .env file: $e");
+  }
 
   runApp(
     EasyLocalization(
       // supportedLocales: const [Locale('en'), Locale('id'), Locale('nia')],
-      supportedLocales: const [Locale('bew'), Locale('bjn'), Locale('btm'), Locale('en'), Locale('gor'), Locale('id'), Locale('mad'), Locale('min'), Locale('ms'), Locale('nia'), Locale('su')],
+      supportedLocales: const [
+        Locale('bew'),
+        Locale('bjn'),
+        Locale('btm'),
+        Locale('en'),
+        Locale('gor'),
+        Locale('id'),
+        Locale('mad'),
+        Locale('min'),
+        Locale('ms'),
+        Locale('nia'),
+        Locale('su'),
+      ],
       startLocale: Locale(initialLanguageCode),
       fallbackLocale: const Locale('id'),
       path: 'assets/translations',
@@ -41,17 +62,19 @@ void main() async {
         providers: [
           ChangeNotifierProvider(create: (_) => ThemeProvider()),
           ChangeNotifierProvider(create: (_) => FontSizeProvider()),
-          ChangeNotifierProvider(create: (_) => SettingsProvider(),
+          ChangeNotifierProvider(create: (_) => SettingsProvider()),
+          ChangeNotifierProvider(create: (_) => AuthProvider(),
           ),
         ],
         child: Consumer2<ThemeProvider, FontSizeProvider>(
           builder: (context, themeProvider, fontSizeProvider, child) {
-            final bool onboardingComplete = prefs.getBool('onboarding_complete') ?? false;
+            final bool onboardingComplete =
+                prefs.getBool('onboarding_complete') ?? false;
 
             return MyApp(
-                themeProvider: themeProvider,
-                fontSizeProvider: fontSizeProvider,
-                onboardingComplete: onboardingComplete,
+              themeProvider: themeProvider,
+              fontSizeProvider: fontSizeProvider,
+              onboardingComplete: onboardingComplete,
             );
           },
         ),
@@ -99,12 +122,14 @@ class MyApp extends StatelessWidget {
       theme: AppThemes.getLightTheme(fontScale),
       darkTheme: AppThemes.getDarkTheme(fontScale),
       themeMode: themeProvider.themeMode,
-        initialRoute: onboardingComplete ? '/' : '/onboarding',
-        routes: {
-          '/': (context) => HomePage(),
-          '/settings': (context) => const SettingsPage(),
-          '/onboarding': (context) => const OnboardingPage(),
-        },
+      initialRoute: onboardingComplete ? '/splash' : '/onboarding',
+      routes: {
+        '/': (context) => const HomePage(),
+        '/splash': (context) => const SplashPage(),
+        '/home': (context) => const HomePage(),
+        '/settings': (context) => const SettingsPage(),
+        '/onboarding': (context) => const OnboardingPage(),
+      },
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import 'package:wikikamus/components/bottom_app_bar_label.dart';
 import 'package:wikikamus/components/drawer_about_section.dart';
+import 'package:wikikamus/components/drawer_auth_section.dart';
 import 'package:wikikamus/components/drawer_community_tools_section.dart';
 import 'package:wikikamus/components/drawer_header_section.dart';
 import 'package:wikikamus/components/drawer_settings_section.dart';
@@ -14,6 +15,7 @@ import 'package:wikikamus/components/open_drawer_button.dart';
 import 'package:wikikamus/components/random_icon_button.dart';
 import 'package:wikikamus/components/refresh_home_icon_button.dart';
 import 'package:wikikamus/components/refresh_icon_button.dart';
+import 'package:wikikamus/components/search_and_create_icon_button.dart';
 import 'package:wikikamus/components/share_icon_button.dart';
 import 'package:wikikamus/components/view_on_web_icon_button.dart';
 import 'package:wikikamus/utils/processed_title.dart';
@@ -25,7 +27,7 @@ class EnglishHomePageBuilder implements HomePageBuilder {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: Text(
-        'english'.tr(),
+        'English Wiktionary',
         style: GoogleFonts.cinzelDecorative(
           textStyle: Theme.of(context).textTheme.displayLarge,
           fontWeight: FontWeight.bold,
@@ -75,7 +77,7 @@ class EnglishHomePageBuilder implements HomePageBuilder {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: Text(
-        'English Wiktionary',
+        'English',
         style: GoogleFonts.cinzelDecorative(
           textStyle: Theme.of(context).textTheme.titleSmall,
           fontWeight: FontWeight.bold,
@@ -127,6 +129,7 @@ class EnglishHomePageBuilder implements HomePageBuilder {
     final List<Widget> barChildren = [
       OpenDrawerButton(),
       BottomAppBarLabel(),
+      SearchAndCreateIconButton(languageCode: 'en'),
       RefreshHomeIconButton(),
       RandomIconButton(languageCode: 'en'),
     ];
@@ -138,6 +141,7 @@ class EnglishHomePageBuilder implements HomePageBuilder {
     final List<Widget> barChildren = [
       BottomAppBarLabel(),
       HomeIconButton(),
+      SearchAndCreateIconButton(languageCode: 'en'),
       RefreshIconButton(languageCode: 'en', title: title),
       RandomIconButton(languageCode: 'en'),
     ];
@@ -160,6 +164,7 @@ class EnglishHomePageBuilder implements HomePageBuilder {
       ),
       DrawerSettingsSection(),
       DrawerAboutSection(),
+      DrawerAuthSection(),
     ];
     return Drawer(child: ListView(children: drawerChildren));
   }

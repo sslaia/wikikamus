@@ -3,12 +3,21 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:wikikamus/models/recent_changes.dart';
 import 'package:wikikamus/models/search_result.dart';
+import 'package:wikikamus/services/html_preprocessors/bew_preprocessor.dart';
+import 'package:wikikamus/services/html_preprocessors/bjn_preprocessor.dart';
+import 'package:wikikamus/services/html_preprocessors/btm_preprocessor.dart';
 
 import 'package:wikikamus/services/html_preprocessors/en_preprocessor.dart';
+import 'package:wikikamus/services/html_preprocessors/gor_preprocessor.dart';
 import 'package:wikikamus/services/html_preprocessors/html_preprocessor.dart';
 import 'package:wikikamus/services/html_preprocessors/id_preprocessor.dart';
+import 'package:wikikamus/services/html_preprocessors/jv_preprocessor.dart';
+import 'package:wikikamus/services/html_preprocessors/mad_preprocessor.dart';
+import 'package:wikikamus/services/html_preprocessors/min_preprocessor.dart';
+import 'package:wikikamus/services/html_preprocessors/ms_preprocessor.dart';
 import 'package:wikikamus/services/html_preprocessors/nia_preprocessor.dart';
 import 'package:wikikamus/services/html_preprocessors/default_preprocessor.dart';
+import 'package:wikikamus/services/html_preprocessors/su_preprocessor.dart';
 
 class ApiService {
   final http.Client _client;
@@ -17,23 +26,23 @@ class ApiService {
   /// The purpose of this is to allow each language to have its own strategy
   /// how to process the page
   final Map<String, HtmlPreprocessor> _preprocessors = {
-    // 'bew': BetawiPreprocessor(),
-    // 'bjn': BanjarPreprocessor(),
-    // 'btm': BatakMandailingPreprocessor(),
+    'bew': BetawiPreprocessor(),
+    'bjn': BanjarPreprocessor(),
+    'btm': BatakMandailingPreprocessor(),
     'en': EnglishPreprocessor(),
-    // 'gor': GorontaloPreprocessor(),
+    'gor': GorontaloPreprocessor(),
     'id': IndonesianPreprocessor(),
-    // 'jv': JavanesePreprocessor(),
-    // 'mad': MaduresePreprocessor(),
-    // 'min': MinangkabauPreprocessor(),
-    // 'ms': MalayPreprocessor(),
+    'jv': JavanesePreprocessor(),
+    'mad': MaduresePreprocessor(),
+    'min': MinangkabauPreprocessor(),
+    'ms': MalayPreprocessor(),
     'nia': NiasPreprocessor(),
-    // 'su': SundanesePreprocessor()
+    'su': SundanesePreprocessor()
   };
 
   ApiService({http.Client? client}) : _client = client ?? http.Client();
 
-  /// This private helper method selects the correct strategy
+  /// This private helper method selects the correct processor
   HtmlPreprocessor _getPreprocessorFor(String languageCode) {
     return _preprocessors[languageCode] ?? DefaultPreprocessor();
   }
@@ -57,8 +66,7 @@ class ApiService {
     return processedHtml;
   }
 
-  /// Fetches any other page
-  /// that needs to be preprocessed
+  /// Fetches any other page that needs to be preprocessed
   Future<String> fetchPageContent({
     required String languageCode,
     required String title,
@@ -84,6 +92,7 @@ class ApiService {
     final appAgent =
         "Wikikamus Android app/1.0 (https://github.com/uuser/wikikamus; slaia@yahoo.com)";
     final uri = Uri.https('$languageCode.m.wiktionary.org', '/w/api.php', {
+      // action=parse&page=$title&prop=text&formatversion=2&format=json&mobileformat=true
       'action': 'parse',
       'page': title,
       'prop': 'text',
@@ -113,7 +122,6 @@ class ApiService {
     required String languageCode,
     required String title,
   }) async {
-    // The User-Agent is important for identifying your app.
     final appAgent =
         "Wikikamus Android app/1.0 (https://github.com/uuser/wikikamus; slaia@yahoo.com)";
 
@@ -130,8 +138,6 @@ class ApiService {
       } else {
         // Handle redirects if the page was moved
         if (response.statusCode == 302) {
-          // You could implement logic to follow the redirect location header,
-          // but for now, an error is clear.
           return 'Error: Page has been moved. Redirects are not yet handled.';
         }
         return 'Error: Failed to load page. Status: ${response.statusCode}';
@@ -158,14 +164,10 @@ class ApiService {
       final response = await http.get(uri, headers: {'User-Agent': appAgent});
 
       if (response.statusCode == 200) {
-        // The response body is the HTML content directly.
-        // The response is UTF-8 encoded by default, which http.get handles correctly.
         return response.body;
       } else {
         // Handle redirects if the page was moved
         if (response.statusCode == 302) {
-          // You could implement logic to follow the redirect location header,
-          // but for now, an error is clear.
           return 'Error: Page has been moved. Redirects are not yet handled.';
         }
         return 'Error: Failed to load page. Status: ${response.statusCode}';
@@ -266,7 +268,7 @@ class ApiService {
         'srsearch': query,
         'srnamespace': '0',
         'format': 'json',
-        'srlimit': '20', // Fetch 20 results at a time
+        'srlimit': '20',
         if (sroffset != null) 'sroffset': sroffset.toString(),
       },
     );

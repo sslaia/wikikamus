@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:wikikamus/components/bottom_app_bar_label.dart';
 import 'package:wikikamus/components/drawer_about_section.dart';
+import 'package:wikikamus/components/drawer_auth_section.dart';
 import 'package:wikikamus/components/drawer_community_tools_section.dart';
 import 'package:wikikamus/components/drawer_header_section.dart';
 import 'package:wikikamus/components/drawer_settings_section.dart';
@@ -17,7 +18,6 @@ import 'package:wikikamus/components/refresh_icon_button.dart';
 import 'package:wikikamus/components/search_and_create_icon_button.dart';
 import 'package:wikikamus/components/share_icon_button.dart';
 import 'package:wikikamus/components/view_on_web_icon_button.dart';
-import 'package:wikikamus/components/wiktionary_search.dart';
 import 'package:wikikamus/pages/content_body.dart';
 import 'package:wikikamus/pages/image_page.dart';
 import 'package:wikikamus/pages/wiki_page.dart';
@@ -30,7 +30,7 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: Text(
-        'indonesian'.tr(),
+        'Wikikamus Bahasa Indonesia',
         style: GoogleFonts.cinzelDecorative(
           textStyle: Theme.of(context).textTheme.displayLarge,
           fontWeight: FontWeight.bold,
@@ -167,6 +167,7 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
       ),
       DrawerSettingsSection(),
       DrawerAboutSection(),
+      DrawerAuthSection(),
     ];
     return Drawer(child: ListView(children: drawerChildren));
   }
@@ -194,7 +195,7 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
         if (result) {
           launchUrl(Uri.parse(editUrl));
         } else {
-          print('Could not launch $editUrl');
+          print('Gagal untuk tayang $editUrl');
         }
       });
     }
@@ -228,8 +229,6 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
               children: [
                 if (pageType == PageType.home) ...[
                   // IndonesiaMainHeader(),
-                  // const SizedBox(height: 28.0),
-                  // WiktionarySearch(languageCode: 'id'),
                   // const SizedBox(height: 28.0),
                 ],
                 ContentBody(
