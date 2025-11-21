@@ -20,9 +20,15 @@ class IndonesianPreprocessor implements HtmlPreprocessor {
       // Hapus daftar isi (table of contents)
       _removeElements(root, '.toc, #toc');
 
-      // Kembalikan konten di dalam <body>
-      return root.toString();
+      /// Konten Halaman Utama Wikikamus Indonesia
+      /// ada dalam table di <div id="mf-index">
+      final mainPageContent = root.find('div', attrs: {'id': 'mf-index'});
 
+      if (mainPageContent != null) {
+        return mainPageContent.outerHtml;
+      } else {
+        return root.toString();
+      }
     } catch (e) {
       return 'Error processing the HTML: $e';
     }

@@ -83,7 +83,7 @@ class _SearchAndCreateDialogState extends State<SearchAndCreateDialog> {
             ),
             onSubmitted: _submitSearch,
           ),
-          const SizedBox(height: 32), // Spacer between the fields
+          const SizedBox(height: 16),
           Text('create'.tr(), style: TextStyle(fontWeight: FontWeight.bold)),
           TextField(
             controller: _createController,

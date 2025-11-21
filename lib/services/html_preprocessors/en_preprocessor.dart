@@ -6,13 +6,21 @@ class EnglishPreprocessor implements HtmlPreprocessor {
   String process(String rawHtml) {
     try {
       final soup = BeautifulSoup(rawHtml);
-      final body = soup.body;
-      if (body == null) return '';
+      final root = soup.body;
+      if (root == null) {
+        return '';
+      }
+
+      // Remove edit text buttons
+      _removeElements(root, '.mw-editsection');
+
+      // Remove table of contents
+      _removeElements(root, '.toc, #toc');
 
       final Set<Bs4Element> contentElements = {};
 
       // Find all elements that will be shown in the app
-      body.findAll('*').forEach((element) {
+      root.findAll('*').forEach((element) {
         String? elementClasses = element.attributes['class'];
         if (elementClasses != null) {
           if (elementClasses.contains('main-page-body-text') ||
@@ -31,5 +39,10 @@ class EnglishPreprocessor implements HtmlPreprocessor {
     } catch (e) {
       return 'Error processing the HTML: $e';
     }
+  }
+
+  /// Helper function to remove all elements matching a CSS selector.
+  void _removeElements(Bs4Element root, String selector) {
+    root.findAll(selector).forEach((element) => element.extract());
   }
 }

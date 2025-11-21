@@ -133,9 +133,9 @@ class OnboardingPageState extends State<OnboardingPage> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 16),
             _buildPageIndicator(),
-            SizedBox(height: 20),
+            SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
@@ -163,7 +163,7 @@ class OnboardingPageState extends State<OnboardingPage> {
                 ],
               ),
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 30),
           ],
         ),
       ),
@@ -187,11 +187,11 @@ class SlideTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(imagePath),
-          SizedBox(height: 20),
+          SizedBox(height: 16),
           Text(title.tr(),
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
           SizedBox(height: 10),
-          Text(description.tr(), textAlign: TextAlign.center),
+          Text(description.tr(), textAlign: TextAlign.center, style: TextStyle(fontSize: 14)),
         ],
       ),
     );
