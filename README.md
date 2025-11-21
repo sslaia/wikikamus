@@ -9,8 +9,6 @@ Melalui Pengaturan pengguna bisa mengatur:
 - Mode gelap terang.
 - Besar ukuran huruf
 - Mencari isi kamus
-- Masuk ke dalam dengan akun Wikimedia pengguna sendiri (hal ini perlu bila pengguna ingin menyunting dan membuat halaman baru)
-- Menyunting dan membuat halaman baru
 
 ## Keterbatasan
 
@@ -31,6 +29,8 @@ Saat ini tidak diproses apa pun, jadi tampilan bisa kacau, tergantung style css 
 Sekarang ini konten halaman diunduh sekali seminggu
 - Memperbaiki penanganan audio pengucapan
 - Memperpaiki penanganan gambar
+- Masuk ke dalam dengan akun Wikimedia pengguna sendiri (hal ini perlu bila pengguna ingin menyunting dan membuat halaman baru)
+- Menyunting dan membuat halaman baru
 
 ## Ingin membantu memperbaiki?
 

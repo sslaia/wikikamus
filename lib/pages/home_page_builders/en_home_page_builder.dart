@@ -164,7 +164,7 @@ class EnglishHomePageBuilder implements HomePageBuilder {
       ),
       DrawerSettingsSection(),
       DrawerAboutSection(),
-      DrawerAuthSection(),
+      // DrawerAuthSection(),
     ];
     return Drawer(child: ListView(children: drawerChildren));
   }
