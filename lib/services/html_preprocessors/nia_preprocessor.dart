@@ -1,21 +1,26 @@
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
-import 'html_preprocessor.dart';
+import 'package:wikikamus/services/html_preprocessors/default_preprocessor.dart';
+import 'package:wikikamus/services/html_preprocessors/html_preprocessor.dart';
+
+/// NOTE: Temporary solution before local Indonesian Wiktionaries admins
+/// agree to use modern, mobile first, responsive design.
+/// When that happens, this class only contains specific cases.
 
 class NiasPreprocessor implements HtmlPreprocessor {
+  final _defaultProcessor = DefaultPreprocessor();
+
   @override
   String process(String rawHtml) {
+    // Run default cleanups first
+    final initialCleanedHtml = _defaultProcessor.process(rawHtml);
+
+    // Nias specific cleanup
     try {
-      final soup = BeautifulSoup(rawHtml);
+      final soup = BeautifulSoup(initialCleanedHtml);
       final root = soup.body;
       if (root == null) {
         return '';
       }
-
-      // Remove edit text buttons
-      _removeElements(root, '.mw-editsection');
-
-      // Remove table of contents
-      _removeElements(root, '.toc, #toc');
 
       // Remove empty sections marked with "Lö hadöi"
       _removeEmptySections(root);
@@ -40,30 +45,31 @@ class NiasPreprocessor implements HtmlPreprocessor {
       /// The following solution is for exctracting
       /// only the right colum contents
       /// which could change if the original website is redesigned
-      final mainPageRightColumn = root.find('div', attrs: {'id': 'mp-right'});
+      final mainContent = root.find('div', attrs: {'id': 'mp-content'});
+      if (mainContent != null) {
+        // If we found the main page content wrapper, return ONLY that.
+        return mainContent.outerHtml;
+      }
 
+      final mainPageRightColumn = root.find('div', attrs: {'id': 'mp-right'});
       if (mainPageRightColumn != null) {
+        // This is a fallback for the main page if the structure uses 'mp-right'.
         // Find all <section> tags within the right column that are explicitly hidden
-        final hiddenSections = mainPageRightColumn.findAll('section', attrs: {
-          'style': 'display: none;',
-        });
+        final hiddenSections = mainPageRightColumn.findAll(
+          'section',
+          attrs: {'style': 'display: none;'},
+        );
         // Remove the 'style' attribute to make them visible
         for (var section in hiddenSections) {
           section.attributes.remove('style');
         }
 
         return mainPageRightColumn.outerHtml;
-      } else {
-        return root.toString();
       }
+      return root.toString();
     } catch (e) {
       return 'Error processing Nias HTML: $e';
     }
-  }
-
-  /// Helper function to remove all elements matching a CSS selector.
-  void _removeElements(Bs4Element root, String selector) {
-    root.findAll(selector).forEach((element) => element.extract());
   }
 
   /// Helper function to find and remove headings followed by "Lö hadöi"

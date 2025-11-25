@@ -172,38 +172,11 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
   }
 
   @override
-  Widget buildBody(BuildContext context, Future<String> futureContent,
-      PageType pageType) {
-
-    void navigateToNewPage(String title) {
-      // Navigate to the new page
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute<void>(
-          builder: (context) => WikiPage(languageCode: 'btm', title: title),
-        ),
-      );
-    }
-
-    void navigateToCreatePage(String title) {
-      final editUrl =
-          'https://btm.m.wiktionary.org/w/index.php?title=$title&action=edit';
-      canLaunchUrl(Uri.parse(editUrl)).then((bool result) {
-        if (result) {
-          launchUrl(Uri.parse(editUrl));
-        } else {
-          print('Could not launch $editUrl');
-        }
-      });
-    }
-
-    void navigateToImagePage(String imgUrl) {
-      Navigator.of(context).push(
-        MaterialPageRoute<void>(
-          builder: (context) => ImagePage(imagePath: imgUrl),
-        ),
-      );
-    }
-
+  Widget buildBody(
+    BuildContext context,
+    Future<String> futureContent,
+    PageType pageType,
+  ) {
     return FutureBuilder<String>(
       future: futureContent,
       builder: (context, snapshot) {
@@ -229,12 +202,7 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
                   WiktionarySearch(languageCode: 'btm'),
                   const SizedBox(height: 28.0),
                 ],
-                ContentBody(
-                  html: pageContent,
-                  onExistentLinkTap: navigateToNewPage,
-                  onNonExistentLinkTap: navigateToCreatePage,
-                  onImageLinkTap: navigateToImagePage,
-                ),
+                ContentBody(html: pageContent, languageCode: 'btm'),
               ],
             ),
           );

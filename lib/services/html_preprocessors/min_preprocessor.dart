@@ -1,35 +1,29 @@
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
-import 'html_preprocessor.dart';
+import 'package:wikikamus/services/html_preprocessors/default_preprocessor.dart';
+import 'package:wikikamus/services/html_preprocessors/html_preprocessor.dart';
 
 class MinangkabauPreprocessor implements HtmlPreprocessor {
+  final _defaultProcessor = DefaultPreprocessor();
+
   @override
   String process(String rawHtml) {
+    // Jalankan penyaringan umum lebih dulu
+    final initialCleanedHtml = _defaultProcessor.process(rawHtml);
+
+    // Saringan khusus untuk Wikikamus Bahasa Minangkabau
     try {
-      final soup = BeautifulSoup(rawHtml);
+      final soup = BeautifulSoup(initialCleanedHtml);
       final root = soup.body;
       if (root == null) {
         return '';
       }
 
-      /// Di bawah ini adalah kode untuk menyaring konten halaman wiki secara umum
-      /// yang berlaku untuk semua situs Wiktionary.
+      // Di sini penyaringan sejauh diperlukan
 
-      // Hapus tombol/pranala "[sunting]" (edit section links)
-      _removeElements(root, '.mw-editsection');
-
-      // Hapus daftar isi (table of contents)
-      _removeElements(root, '.toc, #toc');
-
-      // Kembalikan konten di dalam <body>
+      // Serelah selesai penyaringan kembalikan konten di dalam <body>
       return root.toString();
-
     } catch (e) {
       return 'Error processing the HTML: $e';
     }
-  }
-
-  /// Helper function to remove all elements matching a CSS selector.
-  void _removeElements(Bs4Element root, String selector) {
-    root.findAll(selector).forEach((element) => element.extract());
   }
 }

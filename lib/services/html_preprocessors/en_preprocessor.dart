@@ -1,21 +1,22 @@
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
-import 'html_preprocessor.dart';
+import 'package:wikikamus/services/html_preprocessors/default_preprocessor.dart';
+import 'package:wikikamus/services/html_preprocessors/html_preprocessor.dart';
 
 class EnglishPreprocessor implements HtmlPreprocessor {
+  final _defaultProcessor = DefaultPreprocessor();
+
   @override
   String process(String rawHtml) {
+    // Run the default cleanups first
+    final initialCleanedHtml = _defaultProcessor.process(rawHtml);
+
+    // Run English Wiktionary spedific cleanup
     try {
-      final soup = BeautifulSoup(rawHtml);
+      final soup = BeautifulSoup(initialCleanedHtml);
       final root = soup.body;
       if (root == null) {
         return '';
       }
-
-      // Remove edit text buttons
-      _removeElements(root, '.mw-editsection');
-
-      // Remove table of contents
-      _removeElements(root, '.toc, #toc');
 
       final Set<Bs4Element> contentElements = {};
 
@@ -39,10 +40,5 @@ class EnglishPreprocessor implements HtmlPreprocessor {
     } catch (e) {
       return 'Error processing the HTML: $e';
     }
-  }
-
-  /// Helper function to remove all elements matching a CSS selector.
-  void _removeElements(Bs4Element root, String selector) {
-    root.findAll(selector).forEach((element) => element.extract());
   }
 }

@@ -18,6 +18,7 @@ import 'package:wikikamus/components/refresh_icon_button.dart';
 import 'package:wikikamus/components/search_and_create_icon_button.dart';
 import 'package:wikikamus/components/share_icon_button.dart';
 import 'package:wikikamus/components/view_on_web_icon_button.dart';
+import 'package:wikikamus/pages/content_body.dart';
 import 'package:wikikamus/utils/processed_title.dart';
 import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
 
@@ -170,8 +171,11 @@ class EnglishHomePageBuilder implements HomePageBuilder {
   }
 
   @override
-  Widget buildBody(BuildContext context, Future<String> futureContent,
-      PageType pageType) {
+  Widget buildBody(
+    BuildContext context,
+    Future<String> futureContent,
+    PageType pageType,
+  ) {
     return FutureBuilder<String>(
       future: futureContent,
       builder: (context, snapshot) {
@@ -189,25 +193,14 @@ class EnglishHomePageBuilder implements HomePageBuilder {
 
           return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: HtmlWidget(
-              pageContent,
-              buildAsync: true,
-              textStyle: GoogleFonts.ubuntu(
-                textStyle: Theme.of(context).textTheme.bodyMedium,
-              ),
-
-              /// Customization for mobile display
-              customStylesBuilder: (element) {
-                /// Reduce the size of all heading elements
-                /// as they appear too huge
-                if (element.localName == 'h1' ||
-                    element.localName == 'h2' ||
-                    element.localName == 'h3') {
-                  return {'font-size': '1.2em'};
-                }
-
-                return null;
-              },
+            child: Column(
+              children: [
+                // if (pageType == PageType.home) ...[
+                //   EnglishMainHeader(),
+                //   const SizedBox(height: 28.0),
+                // ],
+                ContentBody(html: pageContent, languageCode: 'en'),
+              ],
             ),
           );
         }

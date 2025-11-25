@@ -27,7 +27,10 @@ class _RandomIconButtonState extends State<RandomIconButton> {
       final String? randomTitle = await _apiService.fetchSingleRandomTitle(languageCode: widget.languageCode);
 
       if (mounted && randomTitle != null) {
-        Navigator.of(context).push(
+        // Make sure it is pushReplacement here,
+        // otherwise it will continue add new pages on the stack
+        // if users load a lot of random pages
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute<void>(
             builder: (context) => WikiPage(languageCode: widget.languageCode, title: randomTitle),
           ),

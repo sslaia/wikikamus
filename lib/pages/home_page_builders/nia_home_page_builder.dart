@@ -22,8 +22,6 @@ import 'package:wikikamus/components/view_on_web_icon_button.dart';
 import 'package:wikikamus/components/wiktionary_search.dart';
 import 'package:wikikamus/pages/content_body.dart';
 import 'package:wikikamus/pages/create_nias_new_entry.dart';
-import 'package:wikikamus/pages/image_page.dart';
-import 'package:wikikamus/pages/wiki_page.dart';
 import 'package:wikikamus/utils/processed_title.dart';
 import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
 
@@ -110,7 +108,7 @@ class NiasHomePageBuilder implements HomePageBuilder {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  title,
+                  processedTitle(title),
                   style: GoogleFonts.ubuntu(
                     textStyle: Theme.of(context).textTheme.titleSmall,
                     fontWeight: FontWeight.bold,
@@ -182,28 +180,11 @@ class NiasHomePageBuilder implements HomePageBuilder {
     Future<String> futureContent,
     PageType pageType,
   ) {
-    void navigateToNewPage(String title) {
-      // Navigate to the new page
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute<void>(
-          builder: (context) => WikiPage(languageCode: 'nia', title: title),
-        ),
-      );
-    }
-
     void navigateToCreatePage(String title) {
       // Navigate to new entry form
       Navigator.of(context).push(
         MaterialPageRoute<void>(
           builder: (context) => CreateNiasNewEntry(title: title),
-        ),
-      );
-    }
-
-    void navigateToImagePage(String imgUrl) {
-      Navigator.of(context).push(
-        MaterialPageRoute<void>(
-          builder: (context) => ImagePage(imagePath: imgUrl),
         ),
       );
     }
@@ -236,9 +217,10 @@ class NiasHomePageBuilder implements HomePageBuilder {
                 ],
                 ContentBody(
                   html: pageContent,
-                  onExistentLinkTap: navigateToNewPage,
-                  onNonExistentLinkTap: navigateToCreatePage,
-                  onImageLinkTap: navigateToImagePage,
+                  languageCode: 'nia',
+                  onCreatePageTap: (String title) {
+                    navigateToCreatePage(title);
+                  },
                 ),
               ],
             ),
