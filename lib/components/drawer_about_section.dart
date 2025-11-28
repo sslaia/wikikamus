@@ -11,7 +11,7 @@ class DrawerAboutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      initiallyExpanded: false,
+      initiallyExpanded: true,
       title: Text(
         'about'.tr(),
         style: GoogleFonts.gelasio(

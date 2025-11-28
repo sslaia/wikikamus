@@ -55,9 +55,24 @@ class ContentBody extends StatelessWidget {
           return null;
         },
 
+
         /// Handling of links
         onTapUrl: (url) async {
           final uri = Uri.parse(url);
+          final titleFromPath = uri.pathSegments.isNotEmpty ? uri.pathSegments.last : '';
+          // List of Special namespace in different languages. Needs to add for Javanese, Banjar, Madurese, etc.
+          final specialNamespaces = ['Special:', 'Spesial:', 'Istimewa:'];
+          final isSpecialLink = specialNamespaces.any((ns) => titleFromPath.startsWith(ns));
+
+          // Handle Special links
+          if (isSpecialLink) {
+            final fullUrl = 'https://$languageCode.m.wiktionary.org/wiki/$titleFromPath';
+            final launchUri = Uri.parse(fullUrl);
+            if (await canLaunchUrl(launchUri)) {
+              await launchUrl(launchUri, mode: LaunchMode.externalApplication);
+            }
+            return true;
+          }
 
           // Handle links that start with "./" (the main page)
           // if (url.startsWith('./')) {

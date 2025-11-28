@@ -7,7 +7,7 @@ class SettingsProvider with ChangeNotifier {
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
-  String _activeLanguageCode = 'id';
+  String _activeLanguageCode = 'nia';
   String get activeLanguageCode => _activeLanguageCode;
 
   String _mainPageTitle = 'Wikikamus:Halaman_Utama';
@@ -15,8 +15,8 @@ class SettingsProvider with ChangeNotifier {
 
   Future<void> loadSettings() async {
     _prefs = await SharedPreferences.getInstance();
-    _activeLanguageCode = _prefs.getString('user_language_code') ?? 'id';
-    _mainPageTitle = _prefs.getString('user_main_page_title') ?? 'Wikikamus:Halaman_Utama';
+    _activeLanguageCode = _prefs.getString('user_language_code') ?? 'nia';
+    _mainPageTitle = _prefs.getString('user_main_page_title') ?? 'Wiktionary:Olayama';
   }
 
   Future<void> setLanguage(String languageCode) async {
@@ -135,34 +135,34 @@ class SettingsProvider with ChangeNotifier {
 
   // Get the titles for the active language
   String getMainPageTitle() {
-    return _mainPageTitles[_activeLanguageCode] ?? _mainPageTitles['id']!;
+    return _mainPageTitles[_activeLanguageCode] ?? _mainPageTitles['nia']!;
   }
 
   String getMainPageTitleForCode(String languageCode) {
-    return _mainPageTitles[languageCode] ?? _mainPageTitles['id']!;
+    return _mainPageTitles[languageCode] ?? _mainPageTitles['nia']!;
   }
 
   String getRecentChangesTitle() {
-    return _recentChangesTitles[_activeLanguageCode] ?? _recentChangesTitles['id']!;
+    return _recentChangesTitles[_activeLanguageCode] ?? _recentChangesTitles['nia']!;
   }
 
   String getRandomPageTitle() {
-    return _randomPageTitles[_activeLanguageCode] ?? _randomPageTitles['id']!;
+    return _randomPageTitles[_activeLanguageCode] ?? _randomPageTitles['nia']!;
   }
 
   String getSpecialPagesTitle() {
-    return _specialPagesTitles[_activeLanguageCode] ?? _specialPagesTitles['id']!;
+    return _specialPagesTitles[_activeLanguageCode] ?? _specialPagesTitles['nia']!;
   }
 
   String getCommunityPortalTitle() {
-    return _communityPortalTitles[_activeLanguageCode] ?? _communityPortalTitles['id']!;
+    return _communityPortalTitles[_activeLanguageCode] ?? _communityPortalTitles['nia']!;
   }
 
   String getHelpTitle() {
-    return _helpTitles[_activeLanguageCode] ?? _helpTitles['id']!;
+    return _helpTitles[_activeLanguageCode] ?? _helpTitles['nia']!;
   }
 
   String getSandboxTitle() {
-    return _sandboxTitles[_activeLanguageCode] ?? _sandboxTitles['id']!;
+    return _sandboxTitles[_activeLanguageCode] ?? _sandboxTitles['nia']!;
   }
 }

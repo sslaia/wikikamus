@@ -32,31 +32,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  bool _isWarningShown = false;
-
-  void _showPerformanceWarning(String languageCode) {
-    // Only show the warning if the language is not 'nia' AND it hasn't been shown yet
-    if (languageCode != 'nia' && !_isWarningShown) {
-      // Use WidgetsBinding to ensure the SnackBar is shown after the build is complete
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('unoptimized_language_warning'.tr()),
-            duration: const Duration(seconds: 5), // Make it visible for a bit longer
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-        // Set the flag to true so it doesn't show again when navigating
-        if (mounted) {
-          setState(() {
-            _isWarningShown = true;
-          });
-        }
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
@@ -86,10 +61,6 @@ class _HomePageState extends State<HomePage> {
                 );
               }
               if (snapshot.hasData) {
-                // Show warning if the language is not 'nia'
-                // as other Wiktionaries haven't been optimised yet
-                _showPerformanceWarning(languageCode);
-
                 return SliverToBoxAdapter(
                   child: Column(
                     children: [
@@ -146,7 +117,7 @@ HomePageBuilder _getPageBuilder(String languageCode) {
     'min': MinangkabauHomePageBuilder(),
     'ms': MalayHomePageBuilder(),
     'nia': NiasHomePageBuilder(),
-    'su': SundaneseHomePageBuilder()
+    'su': SundaneseHomePageBuilder(),
   };
   return builder[languageCode] ?? DefaultHomePageBuilder();
 }

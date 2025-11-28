@@ -69,13 +69,13 @@ List<SliderModel> getSlides() {
     ),
   );
 
-  // slides.add(
-  //   SliderModel(
-  //     imageAssetPath: "assets/images/onboarding8.webp",
-  //     title: "onboarding8_title",
-  //     description: "onboarding8_desc",
-  //   ),
-  // );
+  slides.add(
+    SliderModel(
+      imageAssetPath: "assets/images/warning.webp",
+      title: "onboarding8_title",
+      description: "onboarding8_desc",
+    ),
+  );
 
   return slides;
 }

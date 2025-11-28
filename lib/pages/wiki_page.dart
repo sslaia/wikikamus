@@ -30,7 +30,6 @@ class WikiPage extends StatefulWidget {
 class _WikiPageState extends State<WikiPage> {
   late Future<String> _futurePageContent;
   late HomePageBuilder _pageBuilder;
-  bool _isWarningShown = false;
 
   @override
   void initState() {
@@ -45,27 +44,6 @@ class _WikiPageState extends State<WikiPage> {
       languageCode: widget.languageCode,
       title: widget.title,
     );
-  }
-
-  // This function is meant temporary
-  // until other Wiktionaries are being preprocessed properly
-  void _showPerformanceWarning(String languageCode) {
-    if (languageCode != 'nia' && !_isWarningShown) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('unoptimized_language_warning'.tr()),
-            duration: const Duration(seconds: 5),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-        if (mounted) {
-          setState(() {
-            _isWarningShown = true;
-          });
-        }
-      });
-    }
   }
 
   HomePageBuilder _getPageBuilder(String languageCode) {
@@ -88,7 +66,6 @@ class _WikiPageState extends State<WikiPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       drawer: _pageBuilder.buildDrawer(context),
       bottomNavigationBar: _pageBuilder.buildWikiPageBottomAppBar(
@@ -112,10 +89,6 @@ class _WikiPageState extends State<WikiPage> {
                 );
               }
               if (snapshot.hasData) {
-                // Show warning if the language is not 'nia'
-                // as other Wiktionaries haven't been optimised yet
-                _showPerformanceWarning(widget.languageCode);
-
                 return SliverToBoxAdapter(
                   child: _pageBuilder.buildBody(
                     context,

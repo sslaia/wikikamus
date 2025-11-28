@@ -108,7 +108,7 @@ class NiasHomePageBuilder implements HomePageBuilder {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  processedTitle(title),
+                  processedTitle(title.replaceAll('_', ' ')),
                   style: GoogleFonts.ubuntu(
                     textStyle: Theme.of(context).textTheme.titleSmall,
                     fontWeight: FontWeight.bold,

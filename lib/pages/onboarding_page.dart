@@ -106,9 +106,9 @@ class OnboardingPageState extends State<OnboardingPage> {
                 TextButton(
                   onPressed: () {
                     context.setLocale(Locale('en'));
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(englishSelected);
+                    // ScaffoldMessenger.of(
+                    //   context,
+                    // ).showSnackBar(englishSelected);
                   },
                   child: Text(
                     'english'.tr(),
@@ -122,9 +122,9 @@ class OnboardingPageState extends State<OnboardingPage> {
                 TextButton(
                   onPressed: () {
                     context.setLocale(Locale('id'));
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(indonesiaSelected);
+                    // ScaffoldMessenger.of(
+                    //   context,
+                    // ).showSnackBar(indonesiaSelected);
                   },
                   child: Text(
                     'indonesia'.tr(),
@@ -146,6 +146,8 @@ class OnboardingPageState extends State<OnboardingPage> {
                       onPressed: _onDone,
                       child: Text("skip").tr(),
                     ),
+                  if (_currentPage == slides.length - 1)
+                    Container(),
                   if (_currentPage == slides.length - 1)
                     ElevatedButton(
                       onPressed: _onDone,

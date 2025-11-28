@@ -5,18 +5,19 @@ Sebuah aplikasi untuk menampilkan isi **Wikikamus bahasa daerah di Indonesia**, 
 ## Versi 1.0.0
 
 Melalui Pengaturan pengguna bisa mengatur:
-- Bahasa, yang akan menjadi bahasa item menu dan pesan-pesan serta situs Wikikamus bahasa ybs. Mis. memilih bahasa Madura, akan menampilkan menu dalam bahasa Madura dan semua konten berasal dari situs mad.wiktionary.org
-- Mode gelap terang.
+- Bahasa Wikikamus, Mis. memilih bahasa Madura di Pengaturan akan membuat aplikasi menampilkan Halaman Utama Wikikamus bahasa Madura dan semua operasi pencarian, penyuntingan, pembuatan halaman baru berlangsung di dalam lingkungan Wikikamus Madura yang terdapat di https://mad.wiktionary.org
+- Mode gelap terang
 - Besar ukuran huruf
 - Mencari isi kamus
+- Menyunting dan membuat halaman baru
 
 ## Keterbatasan
 
-Aplikasi ini masih membutuhkan banyak kerja untuk **menyesuaikan berbagai tampilan halaman utama Wikikamus** ke layar aplikasi, bukan hanya menyangkut layout, melainkan juga seksi-seksi yang perlu dan tidak perlu ditampilkan (yang biasa disebut nomobile di css styles)
+Aplikasi ini masih membutuhkan banyak kerja untuk **menyesuaikan berbagai tampilan Halaman Utama Wikikamus** ke layar aplikasi, bukan hanya menyangkut tata letak, melainkan juga seksi-seksi yang perlu dan tidak perlu ditampilkan (yang biasa ditandai dengan nomobile di CSS styles)
 
-Dan karena ada 11 situs yang diikutkan dalam aplikasi ini, maka pekerjaan tsb. di atas menjadi 11 kali lebih banyak!
+Dan karena aplikasi ini mengikutkan 11 situs Wikikamus, maka pekerjaan tsb. di atas menjadi 11 kali lebih banyak!
 
-Seandainya semua situs Wikikamus di Indonesia mengikuti aturan yang sama untuk css styles dan pembagian seksi di situs, maka kerja tsb. hanya dibuat sekali jadi dan akan berjalan untuk semua situs.
+Seandainya semua situs Wikikamus di Indonesia mengikuti rekomendasi Wikimedia yang ditulis di [sini](https://www.mediawiki.org/wiki/Recommendations_for_mobile_friendly_articles_on_Wikimedia_wikis), mempunyai aturan yang sama untuk CSS styles dan mengikuti tata letak yang sama, maka kerja tsb. hanya dibuat sekali jadi dan akan berjalan untuk semua situs. Kita harap para admin Wikikamus bahasa daerah di Indonesia mendengar dan mengikuti rekomendasi ini di masa depan.
 
 ## Rencana untuk versi-versi berikutnya
 
@@ -29,8 +30,8 @@ Saat ini tidak diproses apa pun, jadi tampilan bisa kacau, tergantung style css 
 Sekarang ini konten halaman diunduh sekali seminggu
 - Memperbaiki penanganan audio pengucapan
 - Memperpaiki penanganan gambar
-- Masuk ke dalam dengan akun Wikimedia pengguna sendiri (hal ini perlu bila pengguna ingin menyunting dan membuat halaman baru)
-- Menyunting dan membuat halaman baru
+- Masuk ke dalam dengan akun Wikimedia pengguna sendiri
+- Menyunting dan membuat halaman baru langsung dalam aplikasi sendiri
 
 ## Ingin membantu memperbaiki?
 

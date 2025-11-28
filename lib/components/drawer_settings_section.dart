@@ -9,7 +9,7 @@ class DrawerSettingsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      initiallyExpanded: false,
+      initiallyExpanded: true,
       title: Text(
         'settings'.tr(),
         style: GoogleFonts.gelasio(

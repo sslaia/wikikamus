@@ -45,6 +45,21 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
   }
 
+  void _showPerformanceWarning(String languageCode) {
+    // Only show the warning if the language is not 'nia'
+    if (languageCode != 'nia') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('unoptimized_language_warning'.tr()),
+            duration: const Duration(seconds: 5),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      });
+    }
+  }
+
   Future<void> _selectLanguageAndNavigate(String languageCode) async {
     final settingsProvider = Provider.of<SettingsProvider>(
       context,
@@ -57,7 +72,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
     if (!mounted) return;
     await context.setLocale(Locale(languageCode));
-    
+
+    // Show warning for non Nias wiktionaries
+    _showPerformanceWarning(languageCode);
+
     Navigator.of(
       context,
     ).pushReplacement(MaterialPageRoute(builder: (context) => const HomePage()));

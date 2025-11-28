@@ -40,7 +40,7 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
 
-        manifestPlaceholders["appAuthRedirectScheme"] = "com.blogspot.wikikamus"
+        manifestPlaceholders["appAuthRedirectScheme"] = "https"
     }
 
     signingConfigs {
