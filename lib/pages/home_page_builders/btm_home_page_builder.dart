@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:wikikamus/components/bottom_app_bar_label.dart';
 import 'package:wikikamus/components/drawer_about_section.dart';
@@ -10,6 +9,7 @@ import 'package:wikikamus/components/drawer_header_section.dart';
 import 'package:wikikamus/components/drawer_settings_section.dart';
 import 'package:wikikamus/components/edit_icon_button.dart';
 import 'package:wikikamus/components/home_icon_button.dart';
+import 'package:wikikamus/components/main_header.dart';
 import 'package:wikikamus/components/open_drawer_button.dart';
 import 'package:wikikamus/components/random_icon_button.dart';
 import 'package:wikikamus/components/refresh_home_icon_button.dart';
@@ -17,24 +17,25 @@ import 'package:wikikamus/components/refresh_icon_button.dart';
 import 'package:wikikamus/components/search_and_create_icon_button.dart';
 import 'package:wikikamus/components/share_icon_button.dart';
 import 'package:wikikamus/components/view_on_web_icon_button.dart';
-import 'package:wikikamus/components/wiktionary_search.dart';
+import 'package:wikikamus/components/wiki_bottom_app_bar.dart';
 import 'package:wikikamus/pages/content_body.dart';
-import 'package:wikikamus/pages/image_page.dart';
-import 'package:wikikamus/pages/wiki_page.dart';
 import 'package:wikikamus/utils/processed_title.dart';
 import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
 
 class BatakMandailingHomePageBuilder implements HomePageBuilder {
   @override
-  SliverAppBar buildHomePageAppBar(BuildContext context, String title) {
+  SliverAppBar buildHomePageAppBar(
+      BuildContext context,
+      String title,
+      Orientation orientation,
+      ) {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: Text(
-        'mandailing'.tr(),
+        'Wikikamus Batak Mandailing',
         style: GoogleFonts.cinzelDecorative(
           textStyle: Theme.of(context).textTheme.displayLarge,
           fontWeight: FontWeight.bold,
-          letterSpacing: .7,
           color: Theme.of(context).colorScheme.onPrimary,
         ),
       ),
@@ -58,7 +59,7 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  processedTitle(title),
+                  processedTitle(title.replaceAll('_', ' ')),
                   style: GoogleFonts.ubuntuSans(
                     textStyle: Theme.of(context).textTheme.titleSmall,
                     fontWeight: FontWeight.bold,
@@ -70,11 +71,28 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
           ],
         ),
       ),
+      actions: [
+        if (orientation == Orientation.landscape)
+          Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.menu),
+              color: Theme.of(context).colorScheme.onPrimary,
+              tooltip: 'open_menu'.tr(),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            ),
+          ),
+      ],
     );
   }
 
   @override
-  SliverAppBar buildWikiPageAppBar(BuildContext context, String title) {
+  SliverAppBar buildWikiPageAppBar(
+      BuildContext context,
+      String title,
+      Orientation orientation,
+      ) {
     final String pageUrl = 'https://btm.m.wiktionary.org/wiki/$title';
 
     return SliverAppBar(
@@ -107,7 +125,7 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  title,
+                  processedTitle(title.replaceAll('_', ' ')),
                   style: GoogleFonts.ubuntu(
                     textStyle: Theme.of(context).textTheme.titleSmall,
                     fontWeight: FontWeight.bold,
@@ -123,6 +141,16 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
         ShareIconButton(url: pageUrl),
         EditIconButton(url: '$pageUrl?action=edit&section=all'),
         ViewOnWebIconButton(url: pageUrl),
+        if (orientation == Orientation.landscape)
+          Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.menu),
+              tooltip: 'open_menu'.tr(),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            ),
+          ),
       ],
     );
   }
@@ -131,24 +159,29 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
   Widget buildHomePageBottomAppBar(BuildContext context) {
     final List<Widget> barChildren = [
       OpenDrawerButton(),
-      BottomAppBarLabel(),
+      if (MediaQuery.of(context).orientation == Orientation.landscape) Spacer(),
+      if (MediaQuery.of(context).orientation == Orientation.portrait)
+        BottomAppBarLabel(),
       SearchAndCreateIconButton(languageCode: 'btm'),
       RefreshHomeIconButton(),
       RandomIconButton(languageCode: 'btm'),
     ];
-    return BottomAppBar(child: Row(children: barChildren));
+    return WikiBottomAppBar(children: barChildren);
   }
 
   @override
   Widget buildWikiPageBottomAppBar(BuildContext context, String title) {
     final List<Widget> barChildren = [
-      BottomAppBarLabel(),
+      if (MediaQuery.of(context).orientation == Orientation.portrait)
+        BottomAppBarLabel(),
+      if (MediaQuery.of(context).orientation == Orientation.landscape) Spacer(),
       HomeIconButton(),
-      SearchAndCreateIconButton(languageCode: 'btm'),
+      if (MediaQuery.of(context).orientation == Orientation.portrait)
+        SearchAndCreateIconButton(languageCode: 'btm'),
       RefreshIconButton(languageCode: 'btm', title: title),
       RandomIconButton(languageCode: 'btm'),
     ];
-    return BottomAppBar(child: Row(children: barChildren));
+    return WikiBottomAppBar(children: barChildren);
   }
 
   @override
@@ -162,21 +195,22 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
         randomPageTitle: 'Husus:Halaman sembarang',
         specialPagesTitle: 'Husus:Halaman istimewa',
         communityPortalTitle: 'Wikikamus:Portal komunitas',
-        helpTitle: 'Wikikamus:Alaman Utamo',
-        sandboxTitle: 'Wikikamus:Alaman Utamo',
+        helpTitle: 'Wikikamus:Portal komunitas',
+        sandboxTitle: 'Wikikamus:Portal komunitas',
       ),
       DrawerSettingsSection(),
       DrawerAboutSection(),
+      // DrawerAuthSection(),
     ];
     return Drawer(child: ListView(children: drawerChildren));
   }
 
   @override
   Widget buildBody(
-    BuildContext context,
-    Future<String> futureContent,
-    PageType pageType,
-  ) {
+      BuildContext context,
+      Future<String> futureContent,
+      PageType pageType,
+      ) {
     return FutureBuilder<String>(
       future: futureContent,
       builder: (context, snapshot) {
@@ -186,7 +220,7 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
         if (snapshot.hasError) {
           return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text('Error: ${snapshot.error}'),
+            child: Text('${'error'.tr()}: ${snapshot.error}'),
           );
         }
         if (snapshot.hasData) {
@@ -197,9 +231,7 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
             child: Column(
               children: [
                 if (pageType == PageType.home) ...[
-                  // MandailingMainHeader(),
-                  // const SizedBox(height: 28.0),
-                  WiktionarySearch(languageCode: 'btm'),
+                  MainHeader(language: 'Batak Mandailing'),
                   const SizedBox(height: 28.0),
                 ],
                 ContentBody(html: pageContent, languageCode: 'btm'),

@@ -66,44 +66,56 @@ class _WikiPageState extends State<WikiPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: _pageBuilder.buildDrawer(context),
-      bottomNavigationBar: _pageBuilder.buildWikiPageBottomAppBar(
-        context,
-        widget.title,
-      ),
-      body: CustomScrollView(
-        slivers: [
-          _pageBuilder.buildWikiPageAppBar(context, widget.title),
-          FutureBuilder<String>(
-            future: _futurePageContent,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SliverFillRemaining(
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
-              if (snapshot.hasError) {
-                return SliverFillRemaining(
-                  child: Center(child: Text('Error: ${snapshot.error}')),
-                );
-              }
-              if (snapshot.hasData) {
-                return SliverToBoxAdapter(
-                  child: _pageBuilder.buildBody(
-                    context,
-                    Future.value(snapshot.data!),
-                    PageType.wiki,
-                  ),
-                );
-              }
-              return SliverFillRemaining(
-                child: Center(child: Text('no_content'.tr())),
-              );
-            },
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        final Widget bottomAppBar = _pageBuilder.buildWikiPageBottomAppBar(
+          context,
+          widget.title,
+        );
+        return SafeArea(
+          child: Scaffold(
+            drawer: _pageBuilder.buildDrawer(context),
+            body: CustomScrollView(
+              slivers: [
+                _pageBuilder.buildWikiPageAppBar(context, widget.title, orientation),
+                FutureBuilder<String>(
+                  future: _futurePageContent,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SliverFillRemaining(
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return SliverFillRemaining(
+                        child: Center(child: Text('Error: ${snapshot.error}')),
+                      );
+                    }
+                    if (snapshot.hasData) {
+                      return SliverToBoxAdapter(
+                        child: _pageBuilder.buildBody(
+                          context,
+                          Future.value(snapshot.data!),
+                          PageType.wiki,
+                        ),
+                      );
+                    }
+                    return SliverFillRemaining(
+                      child: Center(child: Text('no_content'.tr())),
+                    );
+                  },
+                ),
+              ],
+            ),
+            endDrawer: orientation == Orientation.landscape
+                ? bottomAppBar
+                : null,
+            bottomNavigationBar: orientation == Orientation.portrait
+                ? bottomAppBar
+                : null,
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

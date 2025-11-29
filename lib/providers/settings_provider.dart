@@ -10,7 +10,7 @@ class SettingsProvider with ChangeNotifier {
   String _activeLanguageCode = 'nia';
   String get activeLanguageCode => _activeLanguageCode;
 
-  String _mainPageTitle = 'Wikikamus:Halaman_Utama';
+  String _mainPageTitle = 'Wiktionary:Olayama';
   String get mainPageTitle => _mainPageTitle;
 
   Future<void> loadSettings() async {

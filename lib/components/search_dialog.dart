@@ -50,23 +50,25 @@ class _SearchDialogState extends State<SearchDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('search_wiki'.tr()),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: _searchController,
-            focusNode: _searchFocusNode,
-            autofocus: true,
-            decoration: InputDecoration(
-              labelText: 'search'.tr(),
-              hintText: 'enter_a_word_to_find'.tr(),
-              hintStyle: TextStyle(fontSize: 11.0, color: Theme.of(context).colorScheme.tertiary),
-              border: OutlineInputBorder(),
-              suffixIcon: Icon(Icons.search),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _searchController,
+              focusNode: _searchFocusNode,
+              autofocus: true,
+              decoration: InputDecoration(
+                labelText: 'search'.tr(),
+                hintText: 'enter_a_word_to_find'.tr(),
+                hintStyle: TextStyle(fontSize: 11.0, color: Theme.of(context).colorScheme.tertiary),
+                border: OutlineInputBorder(),
+                suffixIcon: Icon(Icons.search),
+              ),
+              onSubmitted: _submitSearch,
             ),
-            onSubmitted: _submitSearch,
-          ),
-        ],
+          ],
+        ),
       ),
       actions: [
         TextButton(

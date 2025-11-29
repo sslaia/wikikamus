@@ -7,8 +7,8 @@ enum PageType {
 
 abstract class HomePageBuilder {
 
-  SliverAppBar buildHomePageAppBar(BuildContext context, String title);
-  SliverAppBar buildWikiPageAppBar(BuildContext context, String title);
+  SliverAppBar buildHomePageAppBar(BuildContext context, String title, Orientation orientation);
+  SliverAppBar buildWikiPageAppBar(BuildContext context, String title, Orientation orientation);
   Widget buildWikiPageBottomAppBar(BuildContext context, String title);
   Widget buildHomePageBottomAppBar(BuildContext context);
   Widget buildDrawer(BuildContext context);

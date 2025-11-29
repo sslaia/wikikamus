@@ -65,38 +65,40 @@ class _SearchAndCreateDialogState extends State<SearchAndCreateDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('search_and_create_page'.tr()),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('search_wiki'.tr(), style: TextStyle(fontWeight: FontWeight.bold)),
-          TextField(
-            controller: _searchController,
-            focusNode: _searchFocusNode,
-            autofocus: true,
-            decoration: InputDecoration(
-              labelText: 'search'.tr(),
-              hintText: 'enter_a_word_to_find'.tr(),
-              hintStyle: TextStyle(fontSize: 11.0, color: Theme.of(context).colorScheme.tertiary),
-              border: OutlineInputBorder(),
-              suffixIcon: Icon(Icons.search),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('search_wiki'.tr(), style: TextStyle(fontWeight: FontWeight.bold)),
+            TextField(
+              controller: _searchController,
+              focusNode: _searchFocusNode,
+              autofocus: true,
+              decoration: InputDecoration(
+                labelText: 'search'.tr(),
+                hintText: 'enter_a_word_to_find'.tr(),
+                hintStyle: TextStyle(fontSize: 11.0, color: Theme.of(context).colorScheme.tertiary),
+                border: OutlineInputBorder(),
+                suffixIcon: Icon(Icons.search),
+              ),
+              onSubmitted: _submitSearch,
             ),
-            onSubmitted: _submitSearch,
-          ),
-          const SizedBox(height: 16),
-          Text('create'.tr(), style: TextStyle(fontWeight: FontWeight.bold)),
-          TextField(
-            controller: _createController,
-            decoration: InputDecoration(
-              labelText: 'create_new_entry'.tr(),
-              hintText: 'enter_a_word_to_create'.tr(),
-              hintStyle: TextStyle(fontSize: 11.0, color: Theme.of(context).colorScheme.tertiary),
-              border: OutlineInputBorder(),
-              suffixIcon: Icon(Icons.add_outlined),
+            const SizedBox(height: 16),
+            Text('create'.tr(), style: TextStyle(fontWeight: FontWeight.bold)),
+            TextField(
+              controller: _createController,
+              decoration: InputDecoration(
+                labelText: 'create_new_entry'.tr(),
+                hintText: 'enter_a_word_to_create'.tr(),
+                hintStyle: TextStyle(fontSize: 11.0, color: Theme.of(context).colorScheme.tertiary),
+                border: OutlineInputBorder(),
+                suffixIcon: Icon(Icons.add_outlined),
+              ),
+              onSubmitted: _submitCreate,
             ),
-            onSubmitted: _submitCreate,
-          ),
-        ],
+          ],
+        ),
       ),
       actions: [
         TextButton(

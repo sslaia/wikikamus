@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wikikamus/utils/capitalised_title.dart';
 
 class CreateNewPage extends StatefulWidget {
   const CreateNewPage({super.key, required this.url, this.form});

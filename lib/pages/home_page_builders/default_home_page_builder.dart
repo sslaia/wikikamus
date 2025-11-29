@@ -23,11 +23,15 @@ import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
 /// The following default to id (Indonesian Wiktionary)
 class DefaultHomePageBuilder implements HomePageBuilder {
   @override
-  SliverAppBar buildHomePageAppBar(BuildContext context, String title) {
+  SliverAppBar buildHomePageAppBar(
+    BuildContext context,
+    String title,
+    Orientation orientation,
+  ) {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: Text(
-        'indonesian'.tr(),
+        'Wikikamus Nias',
         style: GoogleFonts.cinzelDecorative(
           textStyle: Theme.of(context).textTheme.displayLarge,
           fontWeight: FontWeight.bold,
@@ -55,7 +59,7 @@ class DefaultHomePageBuilder implements HomePageBuilder {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  processedTitle(title),
+                  processedTitle(title.replaceAll('_', ' ')),
                   style: GoogleFonts.ubuntuSans(
                     textStyle: Theme.of(context).textTheme.titleSmall,
                     fontWeight: FontWeight.bold,
@@ -71,8 +75,12 @@ class DefaultHomePageBuilder implements HomePageBuilder {
   }
 
   @override
-  SliverAppBar buildWikiPageAppBar(BuildContext context, String title) {
-    final String pageUrl = 'https://id.m.wiktionary.org/wiki/$title';
+  SliverAppBar buildWikiPageAppBar(
+    BuildContext context,
+    String title,
+    Orientation orientation,
+  ) {
+    final String pageUrl = 'https://nia.m.wiktionary.org/wiki/$title';
 
     return SliverAppBar(
       automaticallyImplyLeading: false,
@@ -104,7 +112,7 @@ class DefaultHomePageBuilder implements HomePageBuilder {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  title,
+                  processedTitle(title.replaceAll('_', ' ')),
                   style: GoogleFonts.ubuntu(
                     textStyle: Theme.of(context).textTheme.titleSmall,
                     fontWeight: FontWeight.bold,
@@ -129,9 +137,9 @@ class DefaultHomePageBuilder implements HomePageBuilder {
     final List<Widget> barChildren = [
       OpenDrawerButton(),
       BottomAppBarLabel(),
-      SearchAndCreateIconButton(languageCode: 'id'),
+      SearchAndCreateIconButton(languageCode: 'nia'),
       RefreshHomeIconButton(),
-      RandomIconButton(languageCode: 'id'),
+      RandomIconButton(languageCode: 'nia'),
     ];
     return BottomAppBar(child: Row(children: barChildren));
   }
@@ -141,9 +149,9 @@ class DefaultHomePageBuilder implements HomePageBuilder {
     final List<Widget> barChildren = [
       BottomAppBarLabel(),
       HomeIconButton(),
-      SearchAndCreateIconButton(languageCode: 'id'),
-      RefreshIconButton(languageCode: 'id', title: title),
-      RandomIconButton(languageCode: 'id'),
+      SearchAndCreateIconButton(languageCode: 'nia'),
+      RefreshIconButton(languageCode: 'nia', title: title),
+      RandomIconButton(languageCode: 'nia'),
     ];
     return BottomAppBar(child: Row(children: barChildren));
   }
@@ -153,14 +161,14 @@ class DefaultHomePageBuilder implements HomePageBuilder {
     final List<Widget> drawerChildren = [
       DrawerHeaderSection(),
       DrawerCommunityToolsSection(
-        languageCode: 'id',
-        mainPageTitle: 'Wikikamus:Halaman Utama',
-        recentChangesTitle: 'Istimewa:Perubahan terbaru',
-        randomPageTitle: 'Istimewa:Halaman sembarang',
-        specialPagesTitle: 'Istimewa:Halaman istimewa',
-        communityPortalTitle: 'Wikikamus:Warung Kopi',
-        helpTitle: 'Bantuan:Isi',
-        sandboxTitle: 'Wikikamus:Bak pasir',
+        languageCode: 'nia',
+        mainPageTitle: 'Wiktionary:Halaman Utama',
+        recentChangesTitle: 'Spesial:Perubahan terbaru',
+        randomPageTitle: 'Spesial:Halaman sembarang',
+        specialPagesTitle: 'Spesial:Halaman istimewa',
+        communityPortalTitle: 'Wiktionary:Monganga afo',
+        helpTitle: 'Fanolo:Fanolo',
+        sandboxTitle: 'Wiktionary:Nahia wamakori',
       ),
       DrawerSettingsSection(),
       DrawerAboutSection(),
@@ -198,7 +206,7 @@ class DefaultHomePageBuilder implements HomePageBuilder {
                 //   DefaultMainHeader(),
                 //   const SizedBox(height: 28.0),
                 // ],
-                ContentBody(html: pageContent, languageCode: 'id'),
+                ContentBody(html: pageContent, languageCode: 'nia'),
               ],
             ),
           );

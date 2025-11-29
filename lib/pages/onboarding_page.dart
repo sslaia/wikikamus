@@ -33,24 +33,185 @@ class OnboardingPageState extends State<OnboardingPage> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('onboarding_complete', true);
     if (!mounted) return;
-    Navigator.of(context);
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (context) => SettingsPage(),
-      ),
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(builder: (context) => SettingsPage()),
     );
   }
 
-  Widget _buildPageIndicator() {
-    List<Widget> indicators = [];
-    for (int i = 0; i < slides.length; i++) {
-      indicators.add(i == _currentPage ? _indicator(true) : _indicator(false));
-    }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: indicators,
+  void _onPageChanged(int page) {
+    setState(() {
+      _currentPage = page;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: OrientationBuilder(
+          builder: (context, orientation) {
+            final slide = slides[_currentPage];
+            if (orientation == Orientation.landscape) {
+              return LandscapeLayout(
+                pageController: _pageController,
+                onPageChanged: _onPageChanged,
+                slides: slides,
+                currentPage: _currentPage,
+                onDone: _onDone,
+                currentSlide: slide,
+              );
+            } else {
+              return PortraitLayout(
+                pageController: _pageController,
+                onPageChanged: _onPageChanged,
+                slides: slides,
+                currentPage: _currentPage,
+                onDone: _onDone,
+              );
+            }
+          },
+        ),
+      ),
     );
   }
+}
+
+class PortraitLayout extends StatelessWidget {
+  final PageController pageController;
+  final ValueChanged<int> onPageChanged;
+  final List<SliderModel> slides;
+  final int currentPage;
+  final VoidCallback onDone;
+
+  const PortraitLayout({
+    super.key,
+    required this.pageController,
+    required this.onPageChanged,
+    required this.slides,
+    required this.currentPage,
+    required this.onDone,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: PageView.builder(
+            controller: pageController,
+            itemCount: slides.length,
+            onPageChanged: onPageChanged,
+            itemBuilder: (context, index) {
+              return SlideTile(
+                imagePath: slides[index].imageAssetPath,
+                title: slides[index].title,
+                description: slides[index].description,
+              );
+            },
+          ),
+        ),
+        OnboardingControls(
+          currentPage: currentPage,
+          slidesCount: slides.length,
+          pageController: pageController,
+          onDone: onDone,
+        ),
+      ],
+    );
+  }
+}
+
+class LandscapeLayout extends StatelessWidget {
+  final PageController pageController;
+  final ValueChanged<int> onPageChanged;
+  final List<SliderModel> slides;
+  final int currentPage;
+  final VoidCallback onDone;
+  final SliderModel currentSlide;
+
+  const LandscapeLayout({
+    super.key,
+    required this.pageController,
+    required this.onPageChanged,
+    required this.slides,
+    required this.currentPage,
+    required this.onDone,
+    required this.currentSlide,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView.builder(
+      controller: pageController,
+      itemCount: slides.length,
+      onPageChanged: onPageChanged,
+      itemBuilder: (context, index) {
+        final slide = slides[index];
+        return Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Image.asset(slide.imageAssetPath, fit: BoxFit.contain),
+              ),
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          slide.title.tr(),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Text(
+                            slide.description.tr(),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  OnboardingControls(
+                    currentPage: currentPage,
+                    slidesCount: slides.length,
+                    pageController: pageController,
+                    onDone: onDone,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class OnboardingControls extends StatelessWidget {
+  final int currentPage;
+  final int slidesCount;
+  final PageController pageController;
+  final VoidCallback onDone;
+
+  const OnboardingControls({
+    super.key,
+    required this.currentPage,
+    required this.slidesCount,
+    required this.pageController,
+    required this.onDone,
+  });
 
   Widget _indicator(bool isActive) {
     return AnimatedContainer(
@@ -67,119 +228,87 @@ class OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    const englishSelected = SnackBar(
-      content: Text('English is selected for the interface language of this introduction!'),
-    );
-    const indonesiaSelected = SnackBar(
-      content: Text('Bahasa Indonesia menjadi bahasa antar muka pengantar ini!'),
-    );
     final Color color = Theme.of(context).colorScheme.primary;
-    var brightness = View.of(context).platformDispatcher.platformBrightness;
-    bool isDarkMode = brightness == Brightness.dark;
+    final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: slides.length,
-                onPageChanged: (int page) {
-                  setState(() {
-                    _currentPage = page;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  return SlideTile(
-                    imagePath: slides[index].imageAssetPath,
-                    title: slides[index].title,
-                    description: slides[index].description,
-                  );
-                },
+            TextButton(
+              onPressed: () => context.setLocale(const Locale('en')),
+              child: Text(
+                'english'.tr(),
+                style: TextStyle(
+                  color: isDarkMode ? color : const Color(0xff121298),
+                ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // English
-                TextButton(
-                  onPressed: () {
-                    context.setLocale(Locale('en'));
-                    // ScaffoldMessenger.of(
-                    //   context,
-                    // ).showSnackBar(englishSelected);
-                  },
-                  child: Text(
-                    'english'.tr(),
-                    style: TextStyle(color: isDarkMode ? color : Color(0xff121298)),
-                  ),
+            const SizedBox(width: 8.0),
+            const Text('|'),
+            const SizedBox(width: 8.0),
+            TextButton(
+              onPressed: () => context.setLocale(const Locale('id')),
+              child: Text(
+                'indonesia'.tr(),
+                style: TextStyle(
+                  color: isDarkMode ? color : const Color(0xff9b00a1),
                 ),
-                const SizedBox(width: 8.0),
-                Text('|'),
-                const SizedBox(width: 8.0),
-                // Indonesia
-                TextButton(
-                  onPressed: () {
-                    context.setLocale(Locale('id'));
-                    // ScaffoldMessenger.of(
-                    //   context,
-                    // ).showSnackBar(indonesiaSelected);
-                  },
-                  child: Text(
-                    'indonesia'.tr(),
-                    style: TextStyle(color: isDarkMode ? color : Color(0xff9b00a1)),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            _buildPageIndicator(),
-            SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (_currentPage < slides.length - 1)
-                    ElevatedButton(
-                      onPressed: _onDone,
-                      child: Text("skip").tr(),
-                    ),
-                  if (_currentPage == slides.length - 1)
-                    Container(),
-                  if (_currentPage == slides.length - 1)
-                    ElevatedButton(
-                      onPressed: _onDone,
-                      child: Text("done").tr(),
-                    ),
-                  if (_currentPage < slides.length - 1)
-                    ElevatedButton(
-                      onPressed: () {
-                        _pageController.nextPage(
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.ease);
-                      },
-                      child: Text("next").tr(),
-                    ),
-                ],
               ),
             ),
-            SizedBox(height: 30),
           ],
         ),
-      ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            slidesCount,
+            (index) => _indicator(index == currentPage),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (currentPage < slidesCount - 1)
+                ElevatedButton(onPressed: onDone, child: Text("skip".tr())),
+              if (currentPage == slidesCount - 1)
+                const Spacer(), // Use Spacer to push "done" button to the right
+              ElevatedButton(
+                onPressed: () {
+                  if (currentPage < slidesCount - 1) {
+                    pageController.nextPage(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.ease,
+                    );
+                  } else {
+                    onDone();
+                  }
+                },
+                child: Text(
+                  currentPage < slidesCount - 1 ? "next".tr() : "done".tr(),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 30),
+      ],
     );
   }
 }
 
 class SlideTile extends StatelessWidget {
   final String imagePath, title, description;
-  const SlideTile(
-      {super.key,
-        required this.imagePath,
-        required this.title,
-        required this.description});
+  const SlideTile({
+    super.key,
+    required this.imagePath,
+    required this.title,
+    required this.description,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -190,10 +319,17 @@ class SlideTile extends StatelessWidget {
         children: [
           Image.asset(imagePath),
           SizedBox(height: 16),
-          Text(title.tr(),
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+          Text(
+            title.tr(),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
           SizedBox(height: 10),
-          Text(description.tr(), textAlign: TextAlign.center, style: TextStyle(fontSize: 14)),
+          Text(
+            description.tr(),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14),
+          ),
         ],
       ),
     );

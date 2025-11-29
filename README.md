@@ -5,7 +5,7 @@ Sebuah aplikasi untuk menampilkan isi **Wikikamus bahasa daerah di Indonesia**, 
 ## Versi 1.0.0
 
 Melalui Pengaturan pengguna bisa mengatur:
-- Bahasa Wikikamus, Mis. memilih bahasa Madura di Pengaturan akan membuat aplikasi menampilkan Halaman Utama Wikikamus bahasa Madura dan semua operasi pencarian, penyuntingan, pembuatan halaman baru berlangsung di dalam lingkungan Wikikamus Madura yang terdapat di https://mad.wiktionary.org
+- Bahasa Wikikamus, Mis. memilih bahasa Madura di Pengaturan akan membuat aplikasi menampilkan Halaman Utama Wikikamus bahasa Madura dan semua operasi pencarian, penyuntingan, pembuatan halaman baru berlangsung di dalam lingkungan Wikikamus Madura.
 - Mode gelap terang
 - Besar ukuran huruf
 - Mencari isi kamus

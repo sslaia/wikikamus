@@ -9,6 +9,7 @@ import 'package:wikikamus/components/drawer_header_section.dart';
 import 'package:wikikamus/components/drawer_settings_section.dart';
 import 'package:wikikamus/components/edit_icon_button.dart';
 import 'package:wikikamus/components/home_icon_button.dart';
+import 'package:wikikamus/components/main_header.dart';
 import 'package:wikikamus/components/open_drawer_button.dart';
 import 'package:wikikamus/components/random_icon_button.dart';
 import 'package:wikikamus/components/refresh_home_icon_button.dart';
@@ -16,21 +17,29 @@ import 'package:wikikamus/components/refresh_icon_button.dart';
 import 'package:wikikamus/components/search_and_create_icon_button.dart';
 import 'package:wikikamus/components/share_icon_button.dart';
 import 'package:wikikamus/components/view_on_web_icon_button.dart';
+import 'package:wikikamus/components/wiki_bottom_app_bar.dart';
 import 'package:wikikamus/pages/content_body.dart';
 import 'package:wikikamus/utils/processed_title.dart';
 import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
 
+
+
+
+
 class IndonesianHomePageBuilder implements HomePageBuilder {
   @override
-  SliverAppBar buildHomePageAppBar(BuildContext context, String title) {
+  SliverAppBar buildHomePageAppBar(
+    BuildContext context,
+    String title,
+    Orientation orientation,
+  ) {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: Text(
-        'Wikikamus Bahasa Indonesia',
+        'Wikikamus Indonesia',
         style: GoogleFonts.cinzelDecorative(
           textStyle: Theme.of(context).textTheme.displayLarge,
           fontWeight: FontWeight.bold,
-          letterSpacing: .7,
           color: Theme.of(context).colorScheme.onPrimary,
         ),
       ),
@@ -54,7 +63,7 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  processedTitle(title),
+                  processedTitle(title.replaceAll('_', ' ')),
                   style: GoogleFonts.ubuntuSans(
                     textStyle: Theme.of(context).textTheme.titleSmall,
                     fontWeight: FontWeight.bold,
@@ -66,17 +75,34 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
           ],
         ),
       ),
+      actions: [
+        if (orientation == Orientation.landscape)
+          Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.menu),
+              color: Theme.of(context).colorScheme.onPrimary,
+              tooltip: 'open_menu'.tr(),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            ),
+          ),
+      ],
     );
   }
 
   @override
-  SliverAppBar buildWikiPageAppBar(BuildContext context, String title) {
+  SliverAppBar buildWikiPageAppBar(
+    BuildContext context,
+    String title,
+    Orientation orientation,
+  ) {
     final String pageUrl = 'https://id.m.wiktionary.org/wiki/$title';
 
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: Text(
-        'Indonesia',
+        'Bahasa Indonesia',
         style: GoogleFonts.cinzelDecorative(
           textStyle: Theme.of(context).textTheme.titleSmall,
           fontWeight: FontWeight.bold,
@@ -103,7 +129,7 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  title,
+                  processedTitle(title.replaceAll('_', ' ')),
                   style: GoogleFonts.ubuntu(
                     textStyle: Theme.of(context).textTheme.titleSmall,
                     fontWeight: FontWeight.bold,
@@ -119,6 +145,16 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
         ShareIconButton(url: pageUrl),
         EditIconButton(url: '$pageUrl?action=edit&section=all'),
         ViewOnWebIconButton(url: pageUrl),
+        if (orientation == Orientation.landscape)
+          Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.menu),
+              tooltip: 'open_menu'.tr(),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            ),
+          ),
       ],
     );
   }
@@ -127,24 +163,29 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
   Widget buildHomePageBottomAppBar(BuildContext context) {
     final List<Widget> barChildren = [
       OpenDrawerButton(),
+      if (MediaQuery.of(context).orientation == Orientation.landscape) Spacer(),
+      if (MediaQuery.of(context).orientation == Orientation.portrait)
       BottomAppBarLabel(),
       SearchAndCreateIconButton(languageCode: 'id'),
       RefreshHomeIconButton(),
       RandomIconButton(languageCode: 'id'),
     ];
-    return BottomAppBar(child: Row(children: barChildren));
+    return WikiBottomAppBar(children: barChildren);
   }
 
   @override
   Widget buildWikiPageBottomAppBar(BuildContext context, String title) {
     final List<Widget> barChildren = [
-      BottomAppBarLabel(),
+      if (MediaQuery.of(context).orientation == Orientation.portrait)
+        BottomAppBarLabel(),
+      if (MediaQuery.of(context).orientation == Orientation.landscape) Spacer(),
       HomeIconButton(),
+      if (MediaQuery.of(context).orientation == Orientation.portrait)
       SearchAndCreateIconButton(languageCode: 'id'),
       RefreshIconButton(languageCode: 'id', title: title),
       RandomIconButton(languageCode: 'id'),
     ];
-    return BottomAppBar(child: Row(children: barChildren));
+    return WikiBottomAppBar(children: barChildren);
   }
 
   @override
@@ -183,7 +224,7 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
         if (snapshot.hasError) {
           return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text('Error: ${snapshot.error}'),
+            child: Text('${'error'.tr()}: ${snapshot.error}'),
           );
         }
         if (snapshot.hasData) {
@@ -194,8 +235,8 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
             child: Column(
               children: [
                 if (pageType == PageType.home) ...[
-                  // IndonesiaMainHeader(),
-                  // const SizedBox(height: 28.0),
+                  MainHeader(language: 'Indonesia',),
+                  const SizedBox(height: 28.0),
                 ],
                 ContentBody(html: pageContent, languageCode: 'id'),
               ],

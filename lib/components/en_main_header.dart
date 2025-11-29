@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class NiasMainHeader extends StatelessWidget {
-  const NiasMainHeader({super.key});
+class EnglishMainHeader extends StatelessWidget {
+  const EnglishMainHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,17 +13,15 @@ class NiasMainHeader extends StatelessWidget {
         NormalText(text: 'greeting'),
         const SizedBox(height: 16.0),
         Text(
-            'Wikikamus Nias',
-            style: GoogleFonts.cinzelDecorative(
-              textStyle: Theme.of(context).textTheme.displayLarge,
-              fontWeight: FontWeight.bold,
-              letterSpacing: .7,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            textAlign: TextAlign.center,
+          'English Wiktionary',
+          style: GoogleFonts.cinzelDecorative(
+            textStyle: Theme.of(context).textTheme.displayLarge,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          textAlign: TextAlign.center,
         ),
         const SizedBox(height: 16.0),
-        NormalText(text: 'goal'),
         NormalText(text: 'motto'),
       ],
     );

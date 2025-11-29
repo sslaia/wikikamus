@@ -41,54 +41,66 @@ class _HomePageState extends State<HomePage> {
     final pageBuilder = _getPageBuilder(languageCode);
     final futureMainPageContent = _loadInitialData(languageCode, mainPageTitle);
 
-    return Scaffold(
-      drawer: pageBuilder.buildDrawer(context),
-      bottomNavigationBar: pageBuilder.buildHomePageBottomAppBar(context),
-      body: CustomScrollView(
-        slivers: [
-          pageBuilder.buildHomePageAppBar(context, mainPageTitle),
-          FutureBuilder<String>(
-            future: futureMainPageContent,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SliverFillRemaining(
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
-              if (snapshot.hasError) {
-                return SliverFillRemaining(
-                  child: Center(child: Text('Error: ${snapshot.error}')),
-                );
-              }
-              if (snapshot.hasData) {
-                return SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      pageBuilder.buildBody(
-                        context,
-                        Future.value(snapshot.data!),
-                        PageType.home,
-                      ),
-                      const SpacerImage(),
-                      const SizedBox(height: 16.0),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: HtmlWidget(
-                          wikikamusFooter,
-                          textStyle: const TextStyle(fontSize: 9.0),
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        final Widget bottomAppBar = pageBuilder.buildHomePageBottomAppBar(context);
+        return SafeArea(
+          child: Scaffold(
+            drawer: pageBuilder.buildDrawer(context),
+            body: CustomScrollView(
+              slivers: [
+                pageBuilder.buildHomePageAppBar(context, mainPageTitle, orientation),
+                FutureBuilder<String>(
+                  future: futureMainPageContent,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SliverFillRemaining(
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return SliverFillRemaining(
+                        child: Center(child: Text('Error: ${snapshot.error}')),
+                      );
+                    }
+                    if (snapshot.hasData) {
+                      return SliverToBoxAdapter(
+                        child: Column(
+                          children: [
+                            pageBuilder.buildBody(
+                              context,
+                              Future.value(snapshot.data!),
+                              PageType.home,
+                            ),
+                            const SpacerImage(),
+                            const SizedBox(height: 16.0),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: HtmlWidget(
+                                wikikamusFooter,
+                                textStyle: const TextStyle(fontSize: 9.0),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              }
-              return SliverFillRemaining(
-                child: Center(child: Text('no_content_available.'.tr())),
-              );
-            },
+                      );
+                    }
+                    return SliverFillRemaining(
+                      child: Center(child: Text('no_content_available.'.tr())),
+                    );
+                  },
+                ),
+              ],
+            ),
+            endDrawer: orientation == Orientation.landscape
+                ? bottomAppBar
+                : null,
+            bottomNavigationBar: orientation == Orientation.portrait
+                ? bottomAppBar
+                : null,
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

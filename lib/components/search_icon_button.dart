@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:wikikamus/components/search_and_create_dialog.dart';
 import 'package:wikikamus/components/search_dialog.dart';
 
 class SearchIconButton extends StatelessWidget {

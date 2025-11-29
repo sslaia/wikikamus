@@ -69,7 +69,6 @@ void main() async {
       ),
     );
   } catch (e) {
-    print("A critical error occurred during initialization: $e");
     runApp(InitializationErrorApp(error: e.toString()));
   }
 }
@@ -94,7 +93,10 @@ class InitializationErrorApp extends StatelessWidget {
                 const SizedBox(height: 16),
                 Text(
                   'initialization_failed'.tr(),
-                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
