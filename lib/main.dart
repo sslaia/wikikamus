@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -38,6 +39,15 @@ void main() async {
 
     final bool onboardingComplete =
         prefs.getBool('onboarding_complete') ?? false;
+
+    if (kReleaseMode) {
+      // At the moment only Nias Wiktionary is optimised for mobile.
+      // In anticipation of issues with other Wiktionary
+      // we prevents the user from seeing ugly error messages.
+      ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+        return const SizedBox.shrink();
+      };
+    }
 
     runApp(
       EasyLocalization(

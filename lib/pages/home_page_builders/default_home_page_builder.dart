@@ -9,6 +9,7 @@ import 'package:wikikamus/components/drawer_header_section.dart';
 import 'package:wikikamus/components/drawer_settings_section.dart';
 import 'package:wikikamus/components/edit_icon_button.dart';
 import 'package:wikikamus/components/home_icon_button.dart';
+import 'package:wikikamus/components/main_header.dart';
 import 'package:wikikamus/components/open_drawer_button.dart';
 import 'package:wikikamus/components/random_icon_button.dart';
 import 'package:wikikamus/components/refresh_home_icon_button.dart';
@@ -198,17 +199,19 @@ class DefaultHomePageBuilder implements HomePageBuilder {
         if (snapshot.hasData) {
           final String pageContent = snapshot.data ?? 'no_content'.tr();
 
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                // if (pageType == PageType.home) ...[
-                //   DefaultMainHeader(),
-                //   const SizedBox(height: 28.0),
-                // ],
-                ContentBody(html: pageContent, languageCode: 'nia'),
+          return Column(
+            children: [
+              if (pageType == PageType.home) ...[
+                Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      children: [
+                        MainHeader(language: 'Nias'),
+                        const SizedBox(height: 28.0),
+                      ],
+                    ))
               ],
-            ),
+              ContentBody(html: pageContent, languageCode: 'nia'),
+            ],
           );
         }
         return Center(child: Text('no_data'.tr()));

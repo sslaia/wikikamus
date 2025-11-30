@@ -226,17 +226,19 @@ class MalayHomePageBuilder implements HomePageBuilder {
         if (snapshot.hasData) {
           final String pageContent = snapshot.data ?? 'no_content'.tr();
 
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                if (pageType == PageType.home) ...[
-                  MainHeader(language: 'Melayu'),
-                  const SizedBox(height: 28.0),
-                ],
-                ContentBody(html: pageContent, languageCode: 'ms'),
+          return Column(
+            children: [
+              if (pageType == PageType.home) ...[
+                Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      children: [
+                        MainHeader(language: 'Melayu'),
+                        const SizedBox(height: 28.0),
+                      ],
+                    ))
               ],
-            ),
+              ContentBody(html: pageContent, languageCode: 'ms'),
+            ],
           );
         }
         return Center(child: Text('no_data'.tr()));

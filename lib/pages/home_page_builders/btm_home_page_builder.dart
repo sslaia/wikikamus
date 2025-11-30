@@ -25,10 +25,10 @@ import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
 class BatakMandailingHomePageBuilder implements HomePageBuilder {
   @override
   SliverAppBar buildHomePageAppBar(
-      BuildContext context,
-      String title,
-      Orientation orientation,
-      ) {
+    BuildContext context,
+    String title,
+    Orientation orientation,
+  ) {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: Text(
@@ -89,10 +89,10 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
 
   @override
   SliverAppBar buildWikiPageAppBar(
-      BuildContext context,
-      String title,
-      Orientation orientation,
-      ) {
+    BuildContext context,
+    String title,
+    Orientation orientation,
+  ) {
     final String pageUrl = 'https://btm.m.wiktionary.org/wiki/$title';
 
     return SliverAppBar(
@@ -207,10 +207,10 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
 
   @override
   Widget buildBody(
-      BuildContext context,
-      Future<String> futureContent,
-      PageType pageType,
-      ) {
+    BuildContext context,
+    Future<String> futureContent,
+    PageType pageType,
+  ) {
     return FutureBuilder<String>(
       future: futureContent,
       builder: (context, snapshot) {
@@ -226,17 +226,21 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
         if (snapshot.hasData) {
           final String pageContent = snapshot.data ?? 'no_content'.tr();
 
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                if (pageType == PageType.home) ...[
-                  MainHeader(language: 'Batak Mandailing'),
-                  const SizedBox(height: 28.0),
-                ],
-                ContentBody(html: pageContent, languageCode: 'btm'),
+          return Column(
+            children: [
+              if (pageType == PageType.home) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    children: [
+                      MainHeader(language: 'Batak Mandailing'),
+                      const SizedBox(height: 28.0),
+                    ],
+                  ),
+                ),
               ],
-            ),
+              ContentBody(html: pageContent, languageCode: 'btm'),
+            ],
           );
         }
         return Center(child: Text('no_data'.tr()));
