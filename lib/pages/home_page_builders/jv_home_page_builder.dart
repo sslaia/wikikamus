@@ -126,7 +126,7 @@ class JavaneseHomePageBuilder implements HomePageBuilder {
                 alignment: Alignment.bottomCenter,
                 child: Text(
                   processedTitle(title.replaceAll('_', ' ')),
-                  style: GoogleFonts.ubuntu(
+                  style: GoogleFonts.notoSansJavanese(
                     textStyle: Theme.of(context).textTheme.titleSmall,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.secondary,

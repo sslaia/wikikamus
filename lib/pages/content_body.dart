@@ -30,7 +30,7 @@ class ContentBody extends StatelessWidget {
         return GoogleFonts.notoSansSundanese(textStyle: baseStyle);
       // Add other languages with specific fonts here
       default:
-        return GoogleFonts.nunitoSans(textStyle: baseStyle);
+        return GoogleFonts.notoSans(textStyle: baseStyle);
     }
   }
 

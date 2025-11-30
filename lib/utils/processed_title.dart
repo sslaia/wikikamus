@@ -1,14 +1,26 @@
 // this is use for making the title look nicer without the namespace names
 String processedTitle(String title) {
   const prefixes = {
-    'Help:': 5,
-    'Fanolo:': 7,
-    'Wikipedia:': 10,
-    'Wiktionary:': 11,
-    'Wikikamus:': 10,
-    'Wikibooks:':10,
-    'Special:':8,
-    'Portal:':7,
+    "Bhântowan:": 10,
+    "Bantuan:": 8,
+    "Fanolo:": 7,
+    "Help:": 5,
+    "Husus:": 6,
+    "Istimewa:": 9,
+    "Istimèwa:": 9,
+    "Istimiwa": 9,
+    "Khas:": 6,
+    "Mirunggan:": 10,
+    "Pitulung:": 9,
+    "Portal:": 7,
+    "Special:": 8,
+    "Spesial:": 8,
+    "Wikibooks:": 10,
+    "Wikikamus:": 10,
+    "Wikikato:": 9,
+    "Wikipedia:": 10,
+    "Wikisastra:": 11,
+    "Wiktionary:": 11,
   };
 
   for (var entry in prefixes.entries) {

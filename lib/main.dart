@@ -48,6 +48,7 @@ void main() async {
           Locale('en'),
           Locale('gor'),
           Locale('id'),
+          Locale('jv'),
           Locale('mad'),
           Locale('min'),
           Locale('ms'),
