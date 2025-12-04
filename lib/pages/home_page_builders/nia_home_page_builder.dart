@@ -119,8 +119,7 @@ class NiasHomePageBuilder implements HomePageBuilder {
                 alignment: Alignment.bottomCenter,
                 child: Image.asset(
                   "assets/images/nias/ni'obutelai.webp",
-                  fit: BoxFit.fitWidth,
-                  width: double.infinity,
+                  fit: BoxFit.fitHeight,
                   height: 200,
                 ),
               ),

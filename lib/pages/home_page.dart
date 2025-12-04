@@ -66,6 +66,7 @@ class _HomePageState extends State<HomePage> {
               return SliverToBoxAdapter(
                 child: Column(
                   children: [
+                    const SizedBox(height: 16.0),
                     pageBuilder.buildBody(
                       context,
                       Future.value(snapshot.data!),

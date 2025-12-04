@@ -119,8 +119,7 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
                 alignment: Alignment.bottomCenter,
                 child: Image.asset(
                   "assets/images/nias/ni'obutelai.webp",
-                  fit: BoxFit.fitWidth,
-                  width: double.infinity,
+                  fit: BoxFit.fitHeight,
                   height: 200,
                 ),
               ),
@@ -166,6 +165,7 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
       if (MediaQuery.of(context).orientation == Orientation.landscape) Spacer(),
       if (MediaQuery.of(context).orientation == Orientation.portrait)
       BottomAppBarLabel(),
+      if (MediaQuery.of(context).orientation == Orientation.portrait)
       SearchAndCreateIconButton(languageCode: 'id'),
       RefreshHomeIconButton(),
       RandomIconButton(languageCode: 'id'),
