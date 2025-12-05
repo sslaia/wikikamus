@@ -1,6 +1,9 @@
 # wikikamus
 
-Sebuah aplikasi untuk menampilkan isi **Wikikamus bahasa daerah di Indonesia**, termasuk kemungkinan untuk menyunting dan menciptakan halaman baru.
+Sebuah aplikasi untuk menampilkan isi **Wikikamus bahasa daerah di Indonesia**, termasuk kemungkinan untuk menyunting dan menciptakan halaman baru. Dapatkan dari Google Play Store:
+
+<a href="https://play.google.com/store/apps/details?id=com.blogspot.wikikamus"><img alt="Dapatkan dari Google Play Store" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" height="80pt"/></a>
+
 
 ## Versi 1.0.0
 
@@ -32,6 +35,10 @@ Sekarang ini konten halaman diunduh sekali seminggu
 - Memperpaiki penanganan gambar
 - Masuk ke dalam dengan akun Wikimedia pengguna sendiri
 - Menyunting dan membuat halaman baru langsung dalam aplikasi sendiri
+
+## Mau memasang di perangkat cerdas Anda?
+
+Aplikasi Wikikamus telah tayang di [Google Play Store](https://play.google.com/store/apps/details?id=com.blogspot.wikinias).
 
 ## Ingin membantu memperbaiki?
 
