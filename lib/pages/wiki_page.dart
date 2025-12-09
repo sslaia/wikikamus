@@ -95,7 +95,7 @@ class _WikiPageState extends State<WikiPage> {
                       return SliverToBoxAdapter(
                         child: _pageBuilder.buildBody(
                           context,
-                          Future.value(snapshot.data!),
+                          snapshot.data!,
                           PageType.wiki,
                         ),
                       );

@@ -13,5 +13,5 @@ abstract class HomePageBuilder {
   Widget buildHomePageBottomAppBar(BuildContext context);
   Widget buildDrawer(BuildContext context);
 
-  Widget buildBody(BuildContext context, Future<String> futureContent,  PageType pageType);
+  Widget buildBody(BuildContext context, String pageContent,  PageType pageType);
 }

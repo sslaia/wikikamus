@@ -208,43 +208,24 @@ class BatakMandailingHomePageBuilder implements HomePageBuilder {
   @override
   Widget buildBody(
     BuildContext context,
-    Future<String> futureContent,
+    String pageContent,
     PageType pageType,
   ) {
-    return FutureBuilder<String>(
-      future: futureContent,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text('${'error'.tr()}: ${snapshot.error}'),
-          );
-        }
-        if (snapshot.hasData) {
-          final String pageContent = snapshot.data ?? 'no_content'.tr();
-
-          return Column(
-            children: [
-              if (pageType == PageType.home) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Column(
-                    children: [
-                      MainHeader(language: 'Batak Mandailing'),
-                      const SizedBox(height: 28.0),
-                    ],
-                  ),
-                ),
+    return Column(
+      children: [
+        if (pageType == PageType.home) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: [
+                MainHeader(language: 'Batak Mandailing'),
+                const SizedBox(height: 28.0),
               ],
-              ContentBody(html: pageContent, languageCode: 'btm'),
-            ],
-          );
-        }
-        return Center(child: Text('no_data'.tr()));
-      },
+            ),
+          ),
+        ],
+        ContentBody(html: pageContent, languageCode: 'btm'),
+      ],
     );
   }
 }

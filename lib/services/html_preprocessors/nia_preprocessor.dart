@@ -28,47 +28,85 @@ class NiasPreprocessor implements HtmlPreprocessor {
       // Remove empty Gambara sections
       _removeEmptyImageSections(root);
 
-      /// The following solution is for extracting
-      /// the top, left and right columns contents
-      /// and left out everything else
-
-      // final topBanner = root.find('div', attrs: {'id': 'mp-topbanner-container'});
-      // final leftCol = root.find('div', attrs: {'id': 'mp-left'});
-      // final rightCol = root.find('div', attrs: {'id': 'mp-right'});
-
-      // final elements = [topBanner, leftCol, rightCol]
-      //     .where((element) => element != null)
-      //     .map((element) => element!.outerHtml)
-      //     .join('');
-      // return elements.isNotEmpty ? elements : rawHtml;
-
-      /// The following solution is for exctracting
-      /// only the right colum contents
-      /// which could change if the original website is redesigned
+      /// The following solution is for exctracting the contents
+      /// which reside in div with mp-content id
+      /// This would be redundant when the website code changes
       final mainContent = root.find('div', attrs: {'id': 'mp-content'});
       if (mainContent != null) {
+        // --- THIS IS THE NEW LOGIC ---
+        // Filter the main page to only include the sections we want.
+        _filterMainPageContent(mainContent);
+        // --- END OF NEW LOGIC ---
+
+        _cleanUpStyles(mainContent);
+
         // If we found the main page content wrapper, return ONLY that.
         return mainContent.outerHtml;
       }
 
-      final mainPageRightColumn = root.find('div', attrs: {'id': 'mp-right'});
-      if (mainPageRightColumn != null) {
-        // This is a fallback for the main page if the structure uses 'mp-right'.
-        // Find all <section> tags within the right column that are explicitly hidden
-        final hiddenSections = mainPageRightColumn.findAll(
-          'section',
-          attrs: {'style': 'display: none;'},
-        );
-        // Remove the 'style' attribute to make them visible
-        for (var section in hiddenSections) {
-          section.attributes.remove('style');
-        }
-
-        return mainPageRightColumn.outerHtml;
-      }
-      return root.toString();
+      return root.innerHtml;
     } catch (e) {
       return 'Error processing Nias HTML: $e';
+    }
+  }
+
+  /// NEW: Helper function to keep only specific sections of the main page.
+  void _filterMainPageContent(Bs4Element mainContent) {
+    final sectionsToKeepIds = [
+      'mp-featured-word',
+      'mp-dyk',
+    ];
+
+    // Find all direct children sections within the main content div.
+    final allSections = mainContent.findAll(
+      'div',
+      attrs: {'class': 'mp-content-section'},
+    );
+
+    final directChildrenSections = allSections.where(
+            (section) => section.parent?.attributes['id'] == 'mp-content');
+
+    for (final section in directChildrenSections) {
+      // If a section's ID is NOT in our list of sections to keep, remove it.
+      if (!sectionsToKeepIds.contains(section.attributes['id'])) {
+        section.extract();
+      }
+    }
+  }
+
+  /// Helper function to clean up problematic CSS styles from the main content.
+  void _cleanUpStyles(Bs4Element element) {
+    // Find all elements that have a 'style' attribute.
+    final allElements = element.findAll('*');
+    final styledElements =
+    allElements.where((el) => el.attributes.containsKey('style'));
+
+    for (final el in styledElements) {
+      final style = el.attributes['style'];
+      if (style == null) continue;
+
+      // For elements with "display: none", simply remove the style attribute entirely
+      // to make them visible. This is the main fix.
+      if (style.contains('display: none')) {
+        el.attributes.remove('style');
+        continue; // Move to the next element
+      }
+
+      // For other styled elements, remove only the flexbox rules.
+      var rules = style.split(';').map((s) => s.trim()).toList();
+      rules.removeWhere((rule) =>
+      rule.startsWith('display: flex') ||
+          rule.startsWith('flex-direction') ||
+          rule.startsWith('align-items') ||
+          rule.startsWith('justify-content'));
+
+      // Rejoin the cleaned rules and update the style attribute
+      final newStyle = rules.join('; ');
+      if (newStyle.trim().isEmpty) {
+        el.attributes.remove('style');
+      } else {
+        el.attributes['style'] = newStyle;
+      }
     }
   }
 
@@ -124,3 +162,4 @@ class NiasPreprocessor implements HtmlPreprocessor {
     }
   }
 }
+

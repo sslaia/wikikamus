@@ -195,13 +195,13 @@ class NiasHomePageBuilder implements HomePageBuilder {
       DrawerHeaderSection(),
       DrawerCommunityToolsSection(
         languageCode: 'nia',
-        mainPageTitle: 'Wiktionary:Olayama',
+        mainPageTitle: 'Wikikamus:Olayama',
         recentChangesTitle: 'Spesial:Perubahan terbaru',
         randomPageTitle: 'Spesial:Halaman sembarang',
         specialPagesTitle: 'Spesial:Halaman istimewa',
-        communityPortalTitle: 'Wiktionary:Bawagöli zato',
+        communityPortalTitle: 'Wikikamus:Bawagöli zato',
         helpTitle: 'Fanolo:Fanolo',
-        sandboxTitle: 'Wiktionary:Nahia wamakori',
+        sandboxTitle: 'Wikikamus:Nahia wamakori',
       ),
       DrawerSettingsSection(),
       DrawerAboutSection(),
@@ -213,7 +213,7 @@ class NiasHomePageBuilder implements HomePageBuilder {
   @override
   Widget buildBody(
     BuildContext context,
-    Future<String> futureContent,
+    String pageContent,
     PageType pageType,
   ) {
     void navigateToCreatePage(String title) {
@@ -224,47 +224,30 @@ class NiasHomePageBuilder implements HomePageBuilder {
       );
     }
 
-    return FutureBuilder<String>(
-      future: futureContent,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text('Error: ${snapshot.error}'),
-          );
-        }
-        if (snapshot.hasData) {
-          final String pageContent = snapshot.data ?? 'no_content'.tr();
-
-          return Column(
-            children: [
-              if (pageType == PageType.home) ...[
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      children: [
-                        MainHeader(language: 'Nias'),
-                        const SizedBox(height: 28.0),
-                        WiktionarySearch(languageCode: 'nia'),
-                        const SizedBox(height: 28.0),
-                        SpacerColorBar(imageWidth: double.infinity),
-                      ],
-                    ))
+    return Column(
+      children: [
+        if (pageType == PageType.home) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: [
+                MainHeader(language: 'Nias'),
+                const SizedBox(height: 28.0),
+                WiktionarySearch(languageCode: 'nia'),
+                const SizedBox(height: 28.0),
+                SpacerColorBar(imageWidth: double.infinity),
               ],
-              ContentBody(
-                html: pageContent,
-                languageCode: 'nia',
-                onCreatePageTap: (String title) {
-                  navigateToCreatePage(title);
-                },
-              ),
-            ],
-          );
-        }
-        return Center(child: Text('no_data'.tr()));
-      },
+            ),
+          ),
+        ],
+        ContentBody(
+          html: pageContent,
+          languageCode: 'nia',
+          onCreatePageTap: (String title) {
+            navigateToCreatePage(title);
+          },
+        ),
+      ],
     );
   }
 }

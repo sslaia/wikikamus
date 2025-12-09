@@ -10,13 +10,13 @@ class SettingsProvider with ChangeNotifier {
   String _activeLanguageCode = 'nia';
   String get activeLanguageCode => _activeLanguageCode;
 
-  String _mainPageTitle = 'Wiktionary:Olayama';
+  String _mainPageTitle = 'Wikikamus:Olayama';
   String get mainPageTitle => _mainPageTitle;
 
   Future<void> loadSettings() async {
     _prefs = await SharedPreferences.getInstance();
     _activeLanguageCode = _prefs.getString('user_language_code') ?? 'nia';
-    _mainPageTitle = _prefs.getString('user_main_page_title') ?? 'Wiktionary:Olayama';
+    _mainPageTitle = _prefs.getString('user_main_page_title') ?? 'Wikikamus:Olayama';
   }
 
   Future<void> setLanguage(String languageCode) async {
@@ -39,7 +39,7 @@ class SettingsProvider with ChangeNotifier {
     "mad": "Wikikamus:Tanèyan",
     "min": "Laman Utamo",
     "ms": "Wikikamus:Laman Utama",
-    "nia": "Wiktionary:Olayama",
+    "nia": "Wikikamus:Olayama",
     "su": "Tepas",
   };
 
@@ -99,7 +99,7 @@ class SettingsProvider with ChangeNotifier {
     "mad": "Wikikamus:Bârung Kopi",
     "min": "Wikikato:Portal komunitas",
     "ms": "Wikikamus:Gerbang komuniti",
-    "nia": "Wiktionary:Bawagöli zato",
+    "nia": "Wikikamus:Bawagöli zato",
     "su": "Wiktionary:Sawala",
   };
 
@@ -129,7 +129,7 @@ class SettingsProvider with ChangeNotifier {
     "mad": "Bhântowan:Èssè",
     "min": "Wikikato:Portal komunitas",
     "ms": "Wikikamus:Kotak pasir",
-    "nia": "Wiktionary:Nahia wamakori",
+    "nia": "Wikikamus:Nahia wamakori",
     "su": "Wiktionary:Kotrétan",
   };
 

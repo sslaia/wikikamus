@@ -47,9 +47,13 @@ class _HomePageState extends State<HomePage> {
           builder: (context) {
             final orientation = MediaQuery.of(context).orientation;
             return pageBuilder.buildHomePageAppBar(
-                context, mainPageTitle, orientation);
+              context,
+              mainPageTitle,
+              orientation,
+            );
           },
-        ),        FutureBuilder<String>(
+        ),
+        FutureBuilder<String>(
           future: futureMainPageContent,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -59,7 +63,9 @@ class _HomePageState extends State<HomePage> {
             }
             if (snapshot.hasError) {
               return SliverFillRemaining(
-                child: Center(child: Text('${'error'.tr()}: ${snapshot.error}')),
+                child: Center(
+                  child: Text('${'error'.tr()}: ${snapshot.error}'),
+                ),
               );
             }
             if (snapshot.hasData) {
@@ -69,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 16.0),
                     pageBuilder.buildBody(
                       context,
-                      Future.value(snapshot.data!),
+                      snapshot.data!,
                       PageType.home,
                     ),
                     const SpacerImage(),

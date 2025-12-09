@@ -22,10 +22,6 @@ import 'package:wikikamus/pages/content_body.dart';
 import 'package:wikikamus/utils/processed_title.dart';
 import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
 
-
-
-
-
 class IndonesianHomePageBuilder implements HomePageBuilder {
   @override
   SliverAppBar buildHomePageAppBar(
@@ -164,9 +160,9 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
       OpenDrawerButton(),
       if (MediaQuery.of(context).orientation == Orientation.landscape) Spacer(),
       if (MediaQuery.of(context).orientation == Orientation.portrait)
-      BottomAppBarLabel(),
+        BottomAppBarLabel(),
       if (MediaQuery.of(context).orientation == Orientation.portrait)
-      SearchAndCreateIconButton(languageCode: 'id'),
+        SearchAndCreateIconButton(languageCode: 'id'),
       RefreshHomeIconButton(),
       RandomIconButton(languageCode: 'id'),
     ];
@@ -181,7 +177,7 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
       if (MediaQuery.of(context).orientation == Orientation.landscape) Spacer(),
       HomeIconButton(),
       if (MediaQuery.of(context).orientation == Orientation.portrait)
-      SearchAndCreateIconButton(languageCode: 'id'),
+        SearchAndCreateIconButton(languageCode: 'id'),
       RefreshIconButton(languageCode: 'id', title: title),
       RandomIconButton(languageCode: 'id'),
     ];
@@ -212,41 +208,24 @@ class IndonesianHomePageBuilder implements HomePageBuilder {
   @override
   Widget buildBody(
     BuildContext context,
-    Future<String> futureContent,
+    String pageContent,
     PageType pageType,
   ) {
-    return FutureBuilder<String>(
-      future: futureContent,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text('${'error'.tr()}: ${snapshot.error}'),
-          );
-        }
-        if (snapshot.hasData) {
-          final String pageContent = snapshot.data ?? 'no_content'.tr();
-
-          return Column(
-            children: [
-              if (pageType == PageType.home) ...[
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      children: [
-                        MainHeader(language: 'Indonesia'),
-                        const SizedBox(height: 28.0),
-                      ],
-                    ))
+    return Column(
+      children: [
+        if (pageType == PageType.home) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: [
+                MainHeader(language: 'Indonesia'),
+                const SizedBox(height: 28.0),
               ],
-              ContentBody(html: pageContent, languageCode: 'id'),
-            ],
-          );
-        }
-        return Center(child: Text('no_data'.tr()));
-      },
+            ),
+          ),
+        ],
+        ContentBody(html: pageContent, languageCode: 'id'),
+      ],
     );
   }
 }

@@ -163,13 +163,13 @@ class DefaultHomePageBuilder implements HomePageBuilder {
       DrawerHeaderSection(),
       DrawerCommunityToolsSection(
         languageCode: 'nia',
-        mainPageTitle: 'Wiktionary:Halaman Utama',
+        mainPageTitle: 'Wikikamus:Olayama',
         recentChangesTitle: 'Spesial:Perubahan terbaru',
         randomPageTitle: 'Spesial:Halaman sembarang',
         specialPagesTitle: 'Spesial:Halaman istimewa',
-        communityPortalTitle: 'Wiktionary:Monganga afo',
+        communityPortalTitle: 'Wikikamus:Monganga afo',
         helpTitle: 'Fanolo:Fanolo',
-        sandboxTitle: 'Wiktionary:Nahia wamakori',
+        sandboxTitle: 'Wikikamus:Nahia wamakori',
       ),
       DrawerSettingsSection(),
       DrawerAboutSection(),
@@ -181,41 +181,24 @@ class DefaultHomePageBuilder implements HomePageBuilder {
   @override
   Widget buildBody(
     BuildContext context,
-    Future<String> futureContent,
+    String pageContent,
     PageType pageType,
   ) {
-    return FutureBuilder<String>(
-      future: futureContent,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text('Error: ${snapshot.error}'),
-          );
-        }
-        if (snapshot.hasData) {
-          final String pageContent = snapshot.data ?? 'no_content'.tr();
-
-          return Column(
-            children: [
-              if (pageType == PageType.home) ...[
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      children: [
-                        MainHeader(language: 'Nias'),
-                        const SizedBox(height: 28.0),
-                      ],
-                    ))
+    return Column(
+      children: [
+        if (pageType == PageType.home) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: [
+                MainHeader(language: 'Nias'),
+                const SizedBox(height: 28.0),
               ],
-              ContentBody(html: pageContent, languageCode: 'nia'),
-            ],
-          );
-        }
-        return Center(child: Text('no_data'.tr()));
-      },
+            ),
+          ),
+        ],
+        ContentBody(html: pageContent, languageCode: 'nia'),
+      ],
     );
   }
 }

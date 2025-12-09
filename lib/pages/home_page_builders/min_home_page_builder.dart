@@ -25,10 +25,10 @@ import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
 class MinangkabauHomePageBuilder implements HomePageBuilder {
   @override
   SliverAppBar buildHomePageAppBar(
-      BuildContext context,
-      String title,
-      Orientation orientation,
-      ) {
+    BuildContext context,
+    String title,
+    Orientation orientation,
+  ) {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: Text(
@@ -89,10 +89,10 @@ class MinangkabauHomePageBuilder implements HomePageBuilder {
 
   @override
   SliverAppBar buildWikiPageAppBar(
-      BuildContext context,
-      String title,
-      Orientation orientation,
-      ) {
+    BuildContext context,
+    String title,
+    Orientation orientation,
+  ) {
     final String pageUrl = 'https://min.m.wiktionary.org/wiki/$title';
 
     return SliverAppBar(
@@ -207,42 +207,25 @@ class MinangkabauHomePageBuilder implements HomePageBuilder {
 
   @override
   Widget buildBody(
-      BuildContext context,
-      Future<String> futureContent,
-      PageType pageType,
-      ) {
-    return FutureBuilder<String>(
-      future: futureContent,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text('${'error'.tr()}: ${snapshot.error}'),
-          );
-        }
-        if (snapshot.hasData) {
-          final String pageContent = snapshot.data ?? 'no_content'.tr();
-
-          return Column(
-            children: [
-              if (pageType == PageType.home) ...[
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      children: [
-                        MainHeader(language: 'Minangkabau'),
-                        const SizedBox(height: 28.0),
-                      ],
-                    ))
+    BuildContext context,
+    String pageContent,
+    PageType pageType,
+  ) {
+    return Column(
+      children: [
+        if (pageType == PageType.home) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: [
+                MainHeader(language: 'Minangkabau'),
+                const SizedBox(height: 28.0),
               ],
-              ContentBody(html: pageContent, languageCode: 'min'),
-            ],
-          );
-        }
-        return Center(child: Text('no_data'.tr()));
-      },
+            ),
+          ),
+        ],
+        ContentBody(html: pageContent, languageCode: 'min'),
+      ],
     );
   }
 }

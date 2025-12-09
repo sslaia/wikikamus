@@ -23,7 +23,11 @@ import 'package:wikikamus/pages/home_page_builders/home_page_builder.dart';
 
 class EnglishHomePageBuilder implements HomePageBuilder {
   @override
-  SliverAppBar buildHomePageAppBar(BuildContext context, String title, Orientation orientation) {
+  SliverAppBar buildHomePageAppBar(
+    BuildContext context,
+    String title,
+    Orientation orientation,
+  ) {
     return SliverAppBar(
       automaticallyImplyLeading: false,
       title: Text(
@@ -71,7 +75,11 @@ class EnglishHomePageBuilder implements HomePageBuilder {
   }
 
   @override
-  SliverAppBar buildWikiPageAppBar(BuildContext context, String title, Orientation orientation) {
+  SliverAppBar buildWikiPageAppBar(
+    BuildContext context,
+    String title,
+    Orientation orientation,
+  ) {
     final String pageUrl = 'https://en.m.wiktionary.org/wiki/$title';
 
     return SliverAppBar(
@@ -172,41 +180,21 @@ class EnglishHomePageBuilder implements HomePageBuilder {
   @override
   Widget buildBody(
     BuildContext context,
-    Future<String> futureContent,
+    String pageContent,
     PageType pageType,
   ) {
-    return FutureBuilder<String>(
-      future: futureContent,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text('Error: ${snapshot.error}'),
-          );
-        }
-        if (snapshot.hasData) {
-          final String pageContent = snapshot.data ?? 'no_content'.tr();
-
-          return Column(
-            children: [
-              if (pageType == PageType.home) ...[
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      children: [
-                        EnglishMainHeader(),
-                        const SizedBox(height: 28.0),
-                      ],
-                    ))
-              ],
-              ContentBody(html: pageContent, languageCode: 'en'),
-            ],
-          );
-        }
-        return Center(child: Text('no_data'.tr()));
-      },
+    return Column(
+      children: [
+        if (pageType == PageType.home) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: [EnglishMainHeader(), const SizedBox(height: 28.0)],
+            ),
+          ),
+        ],
+        ContentBody(html: pageContent, languageCode: 'en'),
+      ],
     );
   }
 }
