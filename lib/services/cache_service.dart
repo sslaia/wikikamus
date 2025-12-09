@@ -23,7 +23,6 @@ class CacheService {
     final now = DateTime.now();
 
     if (cachedContent != null && timestamp != null) {
-      print('Cached content found: $cachedContent');
       final cachedTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
       if (now.difference(cachedTime).inDays < 1) {
         return cachedContent;

@@ -1,4 +1,8 @@
 const whatsNew = '''
+<h3>Baru di versi 1.0.1</h3>
+- Update darurat karena perubahan namespace Wikikamus Nias (Wiktionary > Wikikamus)
+- Perbaikan sana sini
+
 <h3>Baru di versi 1.0.0</h3>
 <ul>
 <li>Versi pertama Wikikamus. Hanya mencakup fungsi dasar saja.</li>

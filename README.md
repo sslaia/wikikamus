@@ -4,6 +4,9 @@ Sebuah aplikasi untuk menampilkan isi **Wikikamus bahasa daerah di Indonesia**, 
 
 <a href="https://play.google.com/store/apps/details?id=com.blogspot.wikikamus"><img alt="Dapatkan dari Google Play Store" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" height="80pt"/></a>
 
+## Versi 1.0.1
+- Update darurat karena perubahan namespace Wikikamus Nias (Wiktionary > Wikikamus)
+- Perbaikan sana sini
 
 ## Versi 1.0.0
 
