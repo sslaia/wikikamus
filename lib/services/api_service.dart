@@ -90,7 +90,7 @@ class ApiService {
     required String title,
   }) async {
     final appAgent =
-        "Wikikamus Android app/1.0 (https://github.com/uuser/wikikamus; slaia@yahoo.com)";
+        "Wikikamus Android app/1.0 (https://github.com/sslaia/wikikamus; slaia@yahoo.com)";
     final uri = Uri.https('$languageCode.m.wiktionary.org', '/w/api.php', {
       // action=parse&page=$title&prop=text&formatversion=2&format=json&mobileformat=true
       'action': 'parse',
