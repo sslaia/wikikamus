@@ -123,7 +123,7 @@ class ApiService {
     required String title,
   }) async {
     final appAgent =
-        "Wikikamus Android app/1.0 (https://github.com/uuser/wikikamus; slaia@yahoo.com)";
+        "Wikikamus Android app/1.0 (https://github.com/sslaia/wikikamus; slaia@yahoo.com)";
 
     // REST API endpoint for mobile-optimized HTML
     final uri = Uri.parse(
@@ -153,7 +153,7 @@ class ApiService {
     required String title,
   }) async {
     final appAgent =
-        "Wikikamus Android app/1.0 (https://github.com/uuser/wikikamus; slaia@yahoo.com)";
+        "Wikikamus Android app/1.0 (https://github.com/sslaia/wikikamus; slaia@yahoo.com)";
 
     // REST API endpoint for mobile-optimized HTML
     final uri = Uri.parse(
